@@ -6,7 +6,7 @@ import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as budgets from 'aws-cdk-lib/aws-budgets';
 import { Construct } from 'constructs';
 
-export class ClawdbotStack extends cdk.Stack {
+export class MoltbotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -60,7 +60,7 @@ export class ClawdbotStack extends cdk.Stack {
     // Free Tier: VPCs are free, only resources inside cost money
     // ========================================
 
-    const vpc = new ec2.Vpc(this, 'ClawdbotVPC', {
+    const vpc = new ec2.Vpc(this, 'MoltbotVPC', {
       maxAzs: 1,  // Single AZ = Free Tier friendly
       natGateways: 0,  // No NAT Gateway = Free (use IGW only)
       subnetConfiguration: [
@@ -78,11 +78,11 @@ export class ClawdbotStack extends cdk.Stack {
     // SECURITY GROUP - NO INBOUND TRAFFIC!
     // ========================================
 
-    const securityGroup = new ec2.SecurityGroup(this, 'ClawdbotSecurityGroup', {
+    const securityGroup = new ec2.SecurityGroup(this, 'MoltbotSecurityGroup', {
       vpc,
-      description: 'Clawdbot Gateway - Zero inbound traffic (polling model)',
+      description: 'Moltbot Gateway - Zero inbound traffic (polling model)',
       allowAllOutbound: true,
-      securityGroupName: 'clawdbot-gateway-sg'
+      securityGroupName: 'moltbot-gateway-sg'
     });
 
     // Explicitly document: NO inbound rules = zero attack surface
@@ -92,14 +92,14 @@ export class ClawdbotStack extends cdk.Stack {
     // IAM ROLE - Least Privilege
     // ========================================
 
-    const role = new iam.Role(this, 'ClawdbotInstanceRole', {
+    const role = new iam.Role(this, 'MoltbotInstanceRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
-      description: 'IAM role for Clawdbot EC2 instance - Bedrock + SSM + CloudWatch',
+      description: 'IAM role for Moltbot EC2 instance - Bedrock + SSM + CloudWatch',
       managedPolicies: [
         // Session Manager access (SSH replacement)
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
       ],
-      roleName: 'ClawdbotGatewayRole'
+      roleName: 'MoltbotGatewayRole'
     });
 
     // Bedrock permissions - only Anthropic models
@@ -124,7 +124,7 @@ export class ClawdbotStack extends cdk.Stack {
         'ssm:GetParameters'
       ],
       resources: [
-        `arn:aws:ssm:${this.region}:${this.account}:parameter/clawdbot/*`
+        `arn:aws:ssm:${this.region}:${this.account}:parameter/moltbot/*`
       ]
     }));
 
@@ -139,7 +139,7 @@ export class ClawdbotStack extends cdk.Stack {
         'logs:DescribeLogStreams'
       ],
       resources: [
-        `arn:aws:logs:${this.region}:${this.account}:log-group:/clawdbot/*`
+        `arn:aws:logs:${this.region}:${this.account}:log-group:/moltbot/*`
       ]
     }));
 
@@ -153,7 +153,7 @@ export class ClawdbotStack extends cdk.Stack {
       resources: ['*'],
       conditions: {
         StringEquals: {
-          'cloudwatch:namespace': 'Clawdbot'
+          'cloudwatch:namespace': 'Moltbot'
         }
       }
     }));
@@ -163,16 +163,16 @@ export class ClawdbotStack extends cdk.Stack {
     // ========================================
 
     const telegramTokenParameter = new ssm.StringParameter(this, 'TelegramTokenParameter', {
-      parameterName: '/clawdbot/telegram-token',
+      parameterName: '/moltbot/telegram-token',
       stringValue: telegramToken.valueAsString,
       type: ssm.ParameterType.SECURE_STRING,
-      description: 'Telegram Bot Token for Clawdbot (KMS encrypted)',
+      description: 'Telegram Bot Token for Moltbot (KMS encrypted)',
       tier: ssm.ParameterTier.STANDARD
     });
 
     // Store Bedrock model selection
     new ssm.StringParameter(this, 'BedrockModelParameter', {
-      parameterName: '/clawdbot/bedrock-model',
+      parameterName: '/moltbot/bedrock-model',
       stringValue: bedrockModel.valueAsString,
       type: ssm.ParameterType.STRING,
       description: 'Bedrock model identifier',
@@ -187,16 +187,16 @@ export class ClawdbotStack extends cdk.Stack {
     userData.addCommands(
       '#!/bin/bash',
       'set -e',
-      'exec > >(tee /var/log/clawdbot-bootstrap.log)',
+      'exec > >(tee /var/log/moltbot-bootstrap.log)',
       'exec 2>&1',
       '',
-      'echo "=== Clawdbot Bootstrap Started ==="',
+      'echo "=== Moltbot Bootstrap Started ==="',
       'date',
       '',
       '# Update system',
       'yum update -y',
       '',
-      '# Install Node.js 22 (required for Clawdbot)',
+      '# Install Node.js 22 (required for Moltbot)',
       'echo "Installing Node.js 22..."',
       'curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -',
       'yum install -y nodejs',
@@ -220,7 +220,7 @@ export class ClawdbotStack extends cdk.Stack {
       '# Retrieve Telegram token from SSM',
       'echo "Retrieving Telegram token from SSM..."',
       'TELEGRAM_TOKEN=$(aws ssm get-parameter \\',
-      '  --name /clawdbot/telegram-token \\',
+      '  --name /moltbot/telegram-token \\',
       '  --with-decryption \\',
       `  --region $REGION \\`,
       '  --query Parameter.Value \\',
@@ -233,26 +233,26 @@ export class ClawdbotStack extends cdk.Stack {
       '',
       '# Retrieve Bedrock model',
       'BEDROCK_MODEL=$(aws ssm get-parameter \\',
-      '  --name /clawdbot/bedrock-model \\',
+      '  --name /moltbot/bedrock-model \\',
       `  --region $REGION \\`,
       '  --query Parameter.Value \\',
       '  --output text)',
       '',
       'echo "Bedrock model: $BEDROCK_MODEL"',
       '',
-      '# Install Clawdbot globally',
-      'echo "Installing Clawdbot..."',
-      'npm install -g clawdbot@latest',
+      '# Install Moltbot globally',
+      'echo "Installing Moltbot..."',
+      'npm install -g moltbot@latest',
       '',
-      '# Create clawdbot user (run as non-root)',
-      'useradd -m -s /bin/bash clawdbot || true',
+      '# Create moltbot user (run as non-root)',
+      'useradd -m -s /bin/bash moltbot || true',
       '',
       '# Create config directory',
-      'mkdir -p /home/clawdbot/.clawdbot',
-      'chown -R clawdbot:clawdbot /home/clawdbot',
+      'mkdir -p /home/moltbot/.moltbot',
+      'chown -R moltbot:moltbot /home/moltbot',
       '',
-      '# Configure Clawdbot for Bedrock',
-      'cat > /home/clawdbot/.clawdbot/config.json <<EOF',
+      '# Configure Moltbot for Bedrock',
+      'cat > /home/moltbot/.moltbot/config.json <<EOF',
       '{',
       '  "ai": {',
       '    "provider": "bedrock",',
@@ -272,40 +272,40 @@ export class ClawdbotStack extends cdk.Stack {
       '}',
       'EOF',
       '',
-      'chown clawdbot:clawdbot /home/clawdbot/.clawdbot/config.json',
-      'chmod 600 /home/clawdbot/.clawdbot/config.json',
+      'chown moltbot:moltbot /home/moltbot/.moltbot/config.json',
+      'chmod 600 /home/moltbot/.moltbot/config.json',
       '',
       '# Create systemd service',
-      'cat > /etc/systemd/system/clawdbot.service <<EOF',
+      'cat > /etc/systemd/system/moltbot.service <<EOF',
       '[Unit]',
-      'Description=Clawdbot AI Gateway',
+      'Description=Moltbot AI Gateway',
       'After=network.target',
       '',
       '[Service]',
       'Type=simple',
-      'User=clawdbot',
-      'WorkingDirectory=/home/clawdbot',
-      'ExecStart=/usr/bin/clawdbot start',
+      'User=moltbot',
+      'WorkingDirectory=/home/moltbot',
+      'ExecStart=/usr/bin/moltbot start',
       'Restart=always',
       'RestartSec=10',
       'StandardOutput=journal',
       'StandardError=journal',
-      'SyslogIdentifier=clawdbot',
+      'SyslogIdentifier=moltbot',
       '',
       '[Install]',
       'WantedBy=multi-user.target',
       'EOF',
       '',
-      '# Start Clawdbot service',
+      '# Start Moltbot service',
       'systemctl daemon-reload',
-      'systemctl enable clawdbot',
-      'systemctl start clawdbot',
+      'systemctl enable moltbot',
+      'systemctl start moltbot',
       '',
       '# Verify service status',
       'sleep 5',
-      'systemctl status clawdbot --no-pager',
+      'systemctl status moltbot --no-pager',
       '',
-      'echo "=== Clawdbot Bootstrap Completed ==="',
+      'echo "=== Moltbot Bootstrap Completed ==="',
       'date'
     );
 
@@ -313,7 +313,7 @@ export class ClawdbotStack extends cdk.Stack {
     // EC2 INSTANCE - Amazon Linux 2023 + Encrypted EBS
     // ========================================
 
-    const instance = new ec2.Instance(this, 'ClawdbotInstance', {
+    const instance = new ec2.Instance(this, 'MoltbotInstance', {
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC  // Free Tier eligible
@@ -334,11 +334,11 @@ export class ClawdbotStack extends cdk.Stack {
         })
       }],
       requireImdsv2: true,  // Security: require IMDSv2
-      instanceName: 'clawdbot-gateway'
+      instanceName: 'moltbot-gateway'
     });
 
     // Tag for cost allocation
-    cdk.Tags.of(instance).add('Application', 'Clawdbot');
+    cdk.Tags.of(instance).add('Application', 'Moltbot');
     cdk.Tags.of(instance).add('CostCenter', 'AI-Assistant');
 
     // ========================================
@@ -358,8 +358,8 @@ export class ClawdbotStack extends cdk.Stack {
       }),
       threshold: 1,
       evaluationPeriods: 2,
-      alarmDescription: 'Alert when Clawdbot instance fails health checks',
-      alarmName: 'clawdbot-instance-health',
+      alarmDescription: 'Alert when Moltbot instance fails health checks',
+      alarmName: 'moltbot-instance-health',
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     });
 
@@ -377,7 +377,7 @@ export class ClawdbotStack extends cdk.Stack {
       threshold: 90,
       evaluationPeriods: 3,
       alarmDescription: 'Alert when CPU utilization exceeds 90% for 15 minutes',
-      alarmName: 'clawdbot-cpu-high',
+      alarmName: 'moltbot-cpu-high',
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     });
 
@@ -385,9 +385,9 @@ export class ClawdbotStack extends cdk.Stack {
     // AWS BUDGETS - Cost Control
     // ========================================
 
-    new budgets.CfnBudget(this, 'ClawdbotBudget', {
+    new budgets.CfnBudget(this, 'MoltbotBudget', {
       budget: {
-        budgetName: 'Clawdbot-Monthly-Budget',
+        budgetName: 'Moltbot-Monthly-Budget',
         budgetLimit: {
           amount: budgetAmount.valueAsNumber,
           unit: 'USD'
@@ -396,7 +396,7 @@ export class ClawdbotStack extends cdk.Stack {
         budgetType: 'COST',
         costFilters: {
           TagKeyValue: [
-            `user:Application$Clawdbot`
+            `user:Application$Moltbot`
           ]
         }
       },
@@ -436,8 +436,8 @@ export class ClawdbotStack extends cdk.Stack {
     // CLOUDWATCH LOG GROUP - Centralized Logging
     // ========================================
 
-    const logGroup = new cdk.aws_logs.LogGroup(this, 'ClawdbotLogGroup', {
-      logGroupName: '/clawdbot/gateway',
+    const logGroup = new cdk.aws_logs.LogGroup(this, 'MoltbotLogGroup', {
+      logGroupName: '/moltbot/gateway',
       retention: cdk.aws_logs.RetentionDays.ONE_WEEK,  // Free Tier: 5GB ingestion
       removalPolicy: cdk.RemovalPolicy.DESTROY  // Clean up on stack deletion
     });
@@ -449,43 +449,43 @@ export class ClawdbotStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'InstanceId', {
       value: instance.instanceId,
       description: 'EC2 Instance ID',
-      exportName: 'ClawdbotInstanceId'
+      exportName: 'MoltbotInstanceId'
     });
 
     new cdk.CfnOutput(this, 'InstancePublicIp', {
       value: instance.instancePublicIp,
       description: 'Public IP (for reference only - SSH disabled)',
-      exportName: 'ClawdbotPublicIp'
+      exportName: 'MoltbotPublicIp'
     });
 
     new cdk.CfnOutput(this, 'ConnectCommand', {
       value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region}`,
       description: 'Command to connect via Session Manager (no SSH needed)',
-      exportName: 'ClawdbotConnectCommand'
+      exportName: 'MoltbotConnectCommand'
     });
 
     new cdk.CfnOutput(this, 'LogsCommand', {
-      value: `aws logs tail /clawdbot/gateway --follow --region ${this.region}`,
+      value: `aws logs tail /moltbot/gateway --follow --region ${this.region}`,
       description: 'Command to view live logs',
-      exportName: 'ClawdbotLogsCommand'
+      exportName: 'MoltbotLogsCommand'
     });
 
     new cdk.CfnOutput(this, 'ServiceStatusCommand', {
-      value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region} && sudo systemctl status clawdbot`,
-      description: 'Command to check Clawdbot service status',
-      exportName: 'ClawdbotStatusCommand'
+      value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region} && sudo systemctl status moltbot`,
+      description: 'Command to check Moltbot service status',
+      exportName: 'MoltbotStatusCommand'
     });
 
     new cdk.CfnOutput(this, 'TelegramTokenParameterArn', {
       value: telegramTokenParameter.parameterArn,
       description: 'SSM Parameter ARN for Telegram token (KMS encrypted)',
-      exportName: 'ClawdbotTelegramTokenArn'
+      exportName: 'MoltbotTelegramTokenArn'
     });
 
     new cdk.CfnOutput(this, 'SecurityGroupId', {
       value: securityGroup.securityGroupId,
       description: 'Security Group ID (zero inbound rules)',
-      exportName: 'ClawdbotSecurityGroupId'
+      exportName: 'MoltbotSecurityGroupId'
     });
 
     // ========================================
@@ -496,8 +496,8 @@ export class ClawdbotStack extends cdk.Stack {
       value: [
         '✅ Deployment complete!',
         '1. Connect: Use Session Manager (see ConnectCommand output)',
-        '2. Logs: Check /var/log/clawdbot-bootstrap.log for setup',
-        '3. Status: Run systemctl status clawdbot',
+        '2. Logs: Check /var/log/moltbot-bootstrap.log for setup',
+        '3. Status: Run systemctl status moltbot',
         '4. Security: Zero inbound ports, KMS-encrypted secrets',
         '5. Cost: Monitor via AWS Budgets (alert at 80%)'
       ].join(' | '),

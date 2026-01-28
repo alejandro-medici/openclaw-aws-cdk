@@ -1,4 +1,4 @@
-# Clawdbot on AWS: Executive Brief & Security Analysis
+# Moltbot on AWS: Executive Brief & Security Analysis
 **Well-Architected Deployment Strategy**
 
 *Version 2.0 - January 2026*
@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-Clawdbot has experienced explosive growth (30,000+ GitHub stars, 9,000 stars in a single day) but faces critical security and deployment challenges. This document presents an AWS CDK-based solution that addresses these issues while maintaining cost parity with community deployments ($0-10/month) and providing a clear enterprise path via Amazon Connect.
+Moltbot has experienced explosive growth (30,000+ GitHub stars, 9,000 stars in a single day) but faces critical security and deployment challenges. This document presents an AWS CDK-based solution that addresses these issues while maintaining cost parity with community deployments ($0-10/month) and providing a clear enterprise path via Amazon Connect.
 
 **Key Opportunity:** No production-ready AWS deployment exists. All current options require NixOS expertise or lack Well-Architected Framework compliance.
 
@@ -55,7 +55,7 @@ Growth rate:         280% in 7 days
 
 **Mac Mini Sales Surge:**
 - Mac Mini sales reached "Black Friday levels" in January 2026
-- Google's AI Lead (Logan Kilpatrick) publicly announced Mac Mini purchase for Clawdbot
+- Google's AI Lead (Logan Kilpatrick) publicly announced Mac Mini purchase for Moltbot
 - Community reports: "Jeff Tang runs 12 Mac Minis + 12 Claude Max Plans"
 
 **Cost Barriers:**
@@ -77,14 +77,14 @@ AWS Free Tier:      $0-10/month (Year 1)
 **Evidence from Research:**
 
 1. **Explicit Mentions:**
-   - Creator quote: "You can run Clawdbot anywhere, even on a free tier virtual machine on AWS" (Peter Steinberger)
+   - Creator quote: "You can run Moltbot anywhere, even on a free tier virtual machine on AWS" (Peter Steinberger)
    - DEV.to articles: "AWS Free Tier provides up to $200 in credits"
    - YouTube tutorials: "You can host it on the cloud for free through AWS's free tier"
 
 2. **Search Volume Patterns:**
-   - "Clawdbot AWS deployment": Present in multiple forums
-   - "Clawdbot free tier": Common search pattern
-   - "Clawdbot cloud": Growing interest
+   - "Moltbot AWS deployment": Present in multiple forums
+   - "Moltbot free tier": Common search pattern
+   - "Moltbot cloud": Growing interest
 
 3. **Gap Analysis:**
    - **Clawdinators (AWS):** 172 retweets, 10.8K views BUT requires NixOS expertise
@@ -105,7 +105,7 @@ AWS Free Tier:      $0-10/month (Year 1)
 **Argus Security Platform Report:**
 - **Scanner:** Argus Security v1.0.15 (6-Phase Multi-Scanner + AI)
 - **Date:** January 25, 2026
-- **Repository:** clawdbot/clawdbot
+- **Repository:** moltbot/moltbot
 - **Total Findings:** 512 security issues
 - **Critical Issues:** 8 CRITICAL vulnerabilities
 
@@ -186,7 +186,7 @@ Example Attack (Context Poisoning):
   5. User data exfiltrated
 
 Quote from Security Expert Chad Nelson (Former U.S. Security):
-"Clawdbot's ability to read documents, emails, and webpages 
+"Moltbot's ability to read documents, emails, and webpages 
 could turn them into attack vectors, potentially compromising 
 personal privacy and security."
 ```
@@ -208,7 +208,7 @@ Issue: Control via Telegram/Discord/WhatsApp = RAT
   - If messaging session hijacked → full system control
   - Social engineering via compromised contacts
   
-Quote: "Most users control Clawdbot through Telegram or 
+Quote: "Most users control Moltbot through Telegram or 
 Discord for convenience. This effectively turns a social 
 media app into a Remote Access Trojan."
 
@@ -231,7 +231,7 @@ Issue: Community ecosystem of 565+ skills with minimal vetting
   - Social engineering: "Install this skill to fix X"
   - Supply chain attacks possible
 
-Quote: "With systems like Clawdbot, we face a new threat: 
+Quote: "With systems like Moltbot, we face a new threat: 
 the Malicious Skill... They have a direct line to your 
 terminal."
 
@@ -313,7 +313,7 @@ style that raises reliability questions for production use."
 - **Multiple KOLs:** Highlight prompt injection as "significant threat"
 
 **Phemex News (18 hours ago):**
-> "The crypto community is raising alarms over the security risks posed by Clawdbot, an AI assistant capable of managing emails, calendars, and flights. Key opinion leaders (KOLs) have highlighted potential data leaks from prompt injection attacks as a significant threat."
+> "The crypto community is raising alarms over the security risks posed by Moltbot, an AI assistant capable of managing emails, calendars, and flights. Key opinion leaders (KOLs) have highlighted potential data leaks from prompt injection attacks as a significant threat."
 
 **Why Crypto Community Particularly Concerned:**
 - Access to private keys
@@ -331,7 +331,7 @@ Current mitigation strategies:
 2. Tool allowlists (manual configuration)
 3. Sandboxing mode for groups (Docker-based, opt-in)
 4. Model choice (recommend Opus 4.5 for "prompt-injection resistance")
-5. Manual audits via: clawdbot security audit --deep
+5. Manual audits via: moltbot security audit --deep
 ```
 
 **Gaps:**
@@ -350,7 +350,7 @@ Current mitigation strategies:
 
 #### **Option 1: Clawdinators (Official AWS)**
 ```
-Repository: github.com/clawdbot/clawdinators
+Repository: github.com/moltbot/clawdinators
 Technology: NixOS + OpenTofu
 Released: January 10, 2026
 
@@ -462,7 +462,7 @@ Target Audience: Mac users with hardware
 
 **Market Size:**
 ```
-Total Clawdbot Users:     ~3,000-5,000 active deployments
+Total Moltbot Users:     ~3,000-5,000 active deployments
 Current AWS Users:        ~300-500 (10% of deployers)
 Addressable Market:       1,000-1,500 (those avoiding complexity)
 TAM (if awareness grows): 5,000-10,000 (20-30% of stars)
@@ -474,9 +474,9 @@ TAM (if awareness grows): 5,000-10,000 (20-30% of stars)
 
 ### 4.1 Solution Overview
 
-**Project Name:** clawdbot-aws-cdk
+**Project Name:** moltbot-aws-cdk
 
-**Tagline:** "Production-ready Clawdbot on AWS: Well-Architected & Free Tier"
+**Tagline:** "Production-ready Moltbot on AWS: Well-Architected & Free Tier"
 
 **Value Proposition:**
 ```
@@ -493,9 +493,9 @@ TAM (if awareness grows): 5,000-10,000 (20-30% of stars)
 #### **Security Layer**
 ```typescript
 // 1. NO INBOUND TRAFFIC
-const sg = new SecurityGroup(this, 'ClawdbotSG', {
+const sg = new SecurityGroup(this, 'MoltbotSG', {
   vpc: vpc,
-  description: 'Clawdbot Gateway - Zero inbound',
+  description: 'Moltbot Gateway - Zero inbound',
   allowAllOutbound: true
 });
 // No sg.addIngressRule() calls = zero attack surface
@@ -503,7 +503,7 @@ const sg = new SecurityGroup(this, 'ClawdbotSG', {
 // 2. SECRETS IN SSM (ENCRYPTED)
 const telegramToken = ssm.StringParameter.fromSecureStringParameterAttributes(
   this, 'TelegramToken', {
-    parameterName: '/clawdbot/telegram-token',
+    parameterName: '/moltbot/telegram-token',
     version: 1
   }
 );
@@ -533,9 +533,9 @@ ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
 #### **Cost Controls**
 ```typescript
 // 1. BUDGET ALERT
-const budget = new CfnBudget(this, 'ClawdbotBudget', {
+const budget = new CfnBudget(this, 'MoltbotBudget', {
   budget: {
-    budgetName: 'Clawdbot-Monthly',
+    budgetName: 'Moltbot-Monthly',
     budgetLimit: { amount: 50, unit: 'USD' },
     timeUnit: 'MONTHLY',
     budgetType: 'COST'
@@ -579,7 +579,7 @@ tofu init && tofu apply               # 5-10 min
 # TOTAL: 2-3 hours
 
 # OUR CDK:
-git clone clawdbot-aws-cdk
+git clone moltbot-aws-cdk
 npm install
 cdk bootstrap  # Only first time
 cdk deploy \
@@ -636,7 +636,7 @@ cdk deploy \
 │  │  │  │                                              │  │   │   │
 │  │  │  │  • Amazon Linux 2023                        │  │   │   │
 │  │  │  │  • Node.js 22+ Runtime                      │  │   │   │
-│  │  │  │  • Clawdbot Gateway                         │  │   │   │
+│  │  │  │  • Moltbot Gateway                         │  │   │   │
 │  │  │  │  • CloudWatch Agent                         │  │   │   │
 │  │  │  │                                              │  │   │   │
 │  │  │  │  [IAM Instance Profile]                     │  │   │   │
@@ -711,7 +711,7 @@ Access Methods:
        │ SSH (Port 22) ───────────────▶│ ⚠️ Open SSH Port
        │                               │
        │                         ┌─────┴─────┐
-       │                         │ Clawdbot  │
+       │                         │ Moltbot  │
        │                         │ Gateway   │
        │                         ├───────────┤
        │                         │ Config:   │
@@ -871,7 +871,7 @@ Cost Impact:
 ### 6.1 Project Structure
 
 ```
-clawdbot-aws-cdk/
+moltbot-aws-cdk/
 ├── README.md                           # Quick start guide
 ├── SECURITY.md                         # Security best practices
 ├── package.json                        # NPM dependencies
@@ -879,12 +879,12 @@ clawdbot-aws-cdk/
 ├── tsconfig.json                       # TypeScript config
 │
 ├── bin/
-│   └── clawdbot-aws-cdk.ts            # CDK app entry point
+│   └── moltbot-aws-cdk.ts            # CDK app entry point
 │
 ├── lib/
-│   ├── clawdbot-stack.ts              # Main CDK stack
+│   ├── moltbot-stack.ts              # Main CDK stack
 │   ├── constructs/
-│   │   ├── clawdbot-instance.ts       # EC2 instance construct
+│   │   ├── moltbot-instance.ts       # EC2 instance construct
 │   │   ├── security-group.ts          # Security group construct
 │   │   └── iam-role.ts                # IAM role construct
 │   └── user-data/
@@ -899,7 +899,7 @@ clawdbot-aws-cdk/
 │   └── cost-optimization.md           # Cost management strategies
 │
 ├── test/
-│   ├── clawdbot-stack.test.ts         # Stack unit tests
+│   ├── moltbot-stack.test.ts         # Stack unit tests
 │   └── integration/
 │       └── deployment.test.ts          # Integration tests
 │
@@ -922,7 +922,7 @@ Week 1:
 │
 ├─ Day 3-4: User Data Script
 │  ├─ Install Node.js 22+
-│  ├─ Install Clawdbot via npm
+│  ├─ Install Moltbot via npm
 │  ├─ Configure Bedrock provider
 │  ├─ Retrieve secrets from SSM
 │  └─ Start Gateway as systemd service
@@ -958,7 +958,7 @@ Deliverables:
 ✅ Working CDK stack deployable in 10 minutes
 ✅ Complete documentation
 ✅ Security best practices guide
-✅ Blog post: "Production Clawdbot on AWS"
+✅ Blog post: "Production Moltbot on AWS"
 ```
 
 #### **Phase 2: Enhanced Features (Week 3-4)**
@@ -996,7 +996,7 @@ Week 4:
 │  └─ Automated security scanning
 │
 └─ Community Engagement
-   ├─ Submit to awesome-clawdbot-skills
+   ├─ Submit to awesome-moltbot-skills
    ├─ Post on r/aws, r/selfhosted
    ├─ DEV.to tutorial article
    └─ Medium: "Why We Built This"
@@ -1034,13 +1034,13 @@ Week 6:
 ├─ Polish & Launch
 │  ├─ Video walkthrough (YouTube)
 │  ├─ Live demo environment
-│  ├─ Blog post: "Enterprise Clawdbot"
+│  ├─ Blog post: "Enterprise Moltbot"
 │  └─ AWS blog pitch (community contribution)
 │
 └─ Long-term Maintenance
    ├─ GitHub Issues triage
    ├─ Community PRs review
-   ├─ Keep up with Clawdbot releases
+   ├─ Keep up with Moltbot releases
    └─ Security updates monitoring
 
 Deliverables:
@@ -1056,19 +1056,19 @@ Deliverables:
 - [ ] GitHub repo created with complete docs
 - [ ] Successful deployment in <10 minutes verified
 - [ ] Blog post published on DEV.to + Medium
-- [ ] Posted in Clawdbot Discord community
+- [ ] Posted in Moltbot Discord community
 
 **Month 1:**
 - [ ] 100+ GitHub stars
 - [ ] 10+ successful deployments (community feedback)
 - [ ] 0 critical security issues reported
-- [ ] Featured in Clawdbot community channels
+- [ ] Featured in Moltbot community channels
 
 **Month 3:**
 - [ ] 500+ GitHub stars
 - [ ] 50+ active deployments
 - [ ] Contribution from 5+ external developers
-- [ ] Referenced in Clawdbot official docs
+- [ ] Referenced in Moltbot official docs
 
 **Month 6:**
 - [ ] 1000+ GitHub stars
@@ -1192,7 +1192,7 @@ Key Advantages of AWS CDK:
 aws budgets create-budget \
   --account-id 123456789 \
   --budget '{
-    "BudgetName": "Clawdbot-Daily",
+    "BudgetName": "Moltbot-Daily",
     "BudgetLimit": {"Amount": "10", "Unit": "USD"},
     "TimeUnit": "DAILY",
     "BudgetType": "COST"
@@ -1201,7 +1201,7 @@ aws budgets create-budget \
 # 2. MONITOR TOKEN USAGE
 # CloudWatch custom metric (included in CDK)
 aws cloudwatch put-metric-data \
-  --namespace Clawdbot \
+  --namespace Moltbot \
   --metric-name TokensUsed \
   --value 14000 \
   --timestamp $(date -u +%Y-%m-%dT%H:%M:%S)
@@ -1212,7 +1212,7 @@ aws cloudwatch put-metric-data \
 # Savings: 5x cheaper!
 
 # 4. IMPLEMENT CONTEXT PRUNING
-# Clawdbot config (in user data script):
+# Moltbot config (in user data script):
 {
   "agents": {
     "defaults": {
@@ -1423,7 +1423,7 @@ Conversion Rate: VERY HIGH (98% match)
 **Week 1-2: Soft Launch**
 ```
 Day 1: Repository Creation
-  ├─ GitHub repo: clawdbot-aws-cdk (public)
+  ├─ GitHub repo: moltbot-aws-cdk (public)
   ├─ Complete README with quick start
   ├─ LICENSE: MIT
   ├─ SECURITY.md with responsible disclosure
@@ -1437,16 +1437,16 @@ Day 2-3: Documentation
   └─ Troubleshooting FAQ
 
 Day 4-5: Content Creation
-  ├─ DEV.to article: "Secure Clawdbot on AWS Free Tier"
+  ├─ DEV.to article: "Secure Moltbot on AWS Free Tier"
   ├─ Medium article: "Why We Built This"
   ├─ Twitter thread with diagrams
   └─ YouTube: "10-Minute AWS Deployment"
 
 Day 6-7: Community Engagement
-  ├─ Post in Clawdbot Discord (#deployment channel)
-  ├─ Submit to awesome-clawdbot-skills
+  ├─ Post in Moltbot Discord (#deployment channel)
+  ├─ Submit to awesome-moltbot-skills
   ├─ Reddit: r/aws, r/selfhosted, r/ChatGPT
-  └─ Hacker News: "Show HN: AWS CDK for Clawdbot"
+  └─ Hacker News: "Show HN: AWS CDK for Moltbot"
 ```
 
 **Week 3-4: Growth**
@@ -1459,7 +1459,7 @@ Week 3: Community Building
   └─ Collect user testimonials
 
 Week 4: Partnerships
-  ├─ Reach out to Clawdbot maintainer (Peter Steinberger)
+  ├─ Reach out to Moltbot maintainer (Peter Steinberger)
   ├─ Propose official AWS deployment option
   ├─ AWS blog pitch (Community Builders)
   ├─ Anthropic: mention in Bedrock use cases
@@ -1470,25 +1470,25 @@ Week 4: Partnerships
 
 **Articles (4 total):**
 
-1. **"Production-Ready Clawdbot on AWS: Security-First Deployment"**
+1. **"Production-Ready Moltbot on AWS: Security-First Deployment"**
    - Platform: DEV.to + Medium
    - Focus: Security improvements over community deployments
    - CTA: GitHub repo star + deployment
    - Target: 10K views, 100 stars
 
-2. **"AWS vs Hetzner vs Mac Mini: True Cost of Running Clawdbot"**
+2. **"AWS vs Hetzner vs Mac Mini: True Cost of Running Moltbot"**
    - Platform: Medium (detailed analysis)
    - Focus: Cost breakdown with real numbers
    - CTA: Choose AWS for Year 1
    - Target: 5K views, finance-conscious users
 
-3. **"Well-Architected Clawdbot: Enterprise-Grade AI Assistant"**
+3. **"Well-Architected Moltbot: Enterprise-Grade AI Assistant"**
    - Platform: AWS Community Builders blog
    - Focus: WAF compliance + Amazon Connect path
    - CTA: Enterprise adoption
    - Target: AWS visibility, official mention
 
-4. **"From NixOS to CDK: Simplifying Clawdbot Deployment"**
+4. **"From NixOS to CDK: Simplifying Moltbot Deployment"**
    - Platform: Dev.to (technical deep dive)
    - Focus: Why CDK > Clawdinators for most users
    - CTA: Try both, choose simpler
@@ -1496,13 +1496,13 @@ Week 4: Partnerships
 
 **Videos (2 total):**
 
-1. **"Deploy Clawdbot on AWS Free Tier in 10 Minutes"**
+1. **"Deploy Moltbot on AWS Free Tier in 10 Minutes"**
    - Platform: YouTube
    - Length: 12 minutes (with explanation)
    - Content: Full walkthrough, troubleshooting
    - CTA: Link in description to repo
 
-2. **"Clawdbot Security: Protecting Against $300 Bills & Data Leaks"**
+2. **"Moltbot Security: Protecting Against $300 Bills & Data Leaks"**
    - Platform: YouTube
    - Length: 8 minutes
    - Content: Cost controls + Guardrails demo
@@ -1514,7 +1514,7 @@ Week 4: Partnerships
 - [ ] 50+ GitHub stars
 - [ ] 5+ successful deployments (with screenshots)
 - [ ] 1,000+ article views across platforms
-- [ ] Mentioned in Clawdbot Discord
+- [ ] Mentioned in Moltbot Discord
 
 **Month 1 Goals:**
 - [ ] 200+ GitHub stars
@@ -1526,7 +1526,7 @@ Week 4: Partnerships
 - [ ] 500+ GitHub stars
 - [ ] 50+ deployments
 - [ ] 5+ external contributors
-- [ ] Featured in Clawdbot docs or official channels
+- [ ] Featured in Moltbot docs or official channels
 
 **Month 6 Goals:**
 - [ ] 1,000+ GitHub stars
@@ -1542,7 +1542,7 @@ Week 4: Partnerships
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| **Clawdbot breaking changes** | HIGH | HIGH | Pin to stable versions, test before updating |
+| **Moltbot breaking changes** | HIGH | HIGH | Pin to stable versions, test before updating |
 | **AWS Free Tier exhaustion** | MEDIUM | MEDIUM | Budget alerts, usage monitoring |
 | **Bedrock service limits** | LOW | HIGH | Document quotas, retry logic |
 | **User misconfiguration** | HIGH | MEDIUM | Validation in CDK, clear docs |
@@ -1552,7 +1552,7 @@ Week 4: Partnerships
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| **Clawdbot loses popularity** | LOW | HIGH | Diversify (general Bedrock patterns) |
+| **Moltbot loses popularity** | LOW | HIGH | Diversify (general Bedrock patterns) |
 | **Official AWS solution** | LOW | MEDIUM | Position as community-first, simpler |
 | **Clawdinators improves UX** | MEDIUM | MEDIUM | Differentiate on security + simplicity |
 | **Bedrock price increase** | MEDIUM | MEDIUM | Document cost optimization strategies |
@@ -1574,7 +1574,7 @@ Week 4: Partnerships
 ### 12.1 Summary of Value Proposition
 
 **The Problem:**
-Clawdbot has 30K+ GitHub stars but faces critical challenges:
+Moltbot has 30K+ GitHub stars but faces critical challenges:
 - ❌ 8 CRITICAL security vulnerabilities identified
 - ❌ $300 cost runaway incidents reported
 - ❌ No simple AWS deployment exists
@@ -1605,7 +1605,7 @@ AWS CDK deployment that addresses ALL issues:
 - Only solution with enterprise path
 
 **3. Timing is Perfect**
-- Clawdbot viral RIGHT NOW (Jan 26-27, 2026)
+- Moltbot viral RIGHT NOW (Jan 26-27, 2026)
 - Security concerns trending (crypto community)
 - Cost concerns trending ($300 HN story)
 - Community seeking better options
@@ -1614,15 +1614,15 @@ AWS CDK deployment that addresses ALL issues:
 - No competing simple AWS solution
 - Official Clawdinators too complex
 - VPS guides don't address security
-- We can OWN "AWS Clawdbot" category
+- We can OWN "AWS Moltbot" category
 
 ### 12.3 Call to Action
 
 **For Implementers:**
 ```bash
 # Start building TODAY:
-mkdir clawdbot-aws-cdk
-cd clawdbot-aws-cdk
+mkdir moltbot-aws-cdk
+cd moltbot-aws-cdk
 npm init -y
 npm install aws-cdk-lib constructs
 npx cdk init app --language=typescript
@@ -1644,14 +1644,14 @@ npx cdk init app --language=typescript
 - 📝 Share your deployment experience
 - 🐛 Report issues responsibly
 - 🤝 Contribute PRs and improvements
-- 💬 Spread the word in Clawdbot Discord
+- 💬 Spread the word in Moltbot Discord
 
 ---
 
 ## Appendix A: CDK Code Skeleton
 
 ```typescript
-// lib/clawdbot-stack.ts
+// lib/moltbot-stack.ts
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -1659,7 +1659,7 @@ import * as ssm from 'aws-cdk-lib/aws-ssm';
 import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as budgets from 'aws-cdk-lib/aws-budgets';
 
-export class ClawdbotStack extends cdk.Stack {
+export class MoltbotStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -1686,14 +1686,14 @@ export class ClawdbotStack extends cdk.Stack {
     });
 
     // Security Group - NO INBOUND!
-    const sg = new ec2.SecurityGroup(this, 'ClawdbotSecurityGroup', {
+    const sg = new ec2.SecurityGroup(this, 'MoltbotSecurityGroup', {
       vpc,
-      description: 'Clawdbot Gateway - Zero inbound traffic',
+      description: 'Moltbot Gateway - Zero inbound traffic',
       allowAllOutbound: true
     });
 
     // IAM Role
-    const role = new iam.Role(this, 'ClawdbotInstanceRole', {
+    const role = new iam.Role(this, 'MoltbotInstanceRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
@@ -1712,7 +1712,7 @@ export class ClawdbotStack extends cdk.Stack {
     // SSM Parameter permissions
     role.addToPolicy(new iam.PolicyStatement({
       actions: ['ssm:GetParameter', 'ssm:GetParameters'],
-      resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter/clawdbot/*`]
+      resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter/moltbot/*`]
     }));
 
     // CloudWatch Logs permissions
@@ -1722,15 +1722,15 @@ export class ClawdbotStack extends cdk.Stack {
         'logs:CreateLogStream',
         'logs:PutLogEvents'
       ],
-      resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:/clawdbot/*`]
+      resources: [`arn:aws:logs:${this.region}:${this.account}:log-group:/moltbot/*`]
     }));
 
     // Store Telegram token in SSM
     new ssm.StringParameter(this, 'TelegramTokenParameter', {
-      parameterName: '/clawdbot/telegram-token',
+      parameterName: '/moltbot/telegram-token',
       stringValue: telegramToken.valueAsString,
       type: ssm.ParameterType.SECURE_STRING,
-      description: 'Telegram Bot Token for Clawdbot'
+      description: 'Telegram Bot Token for Moltbot'
     });
 
     // User Data script
@@ -1743,26 +1743,26 @@ export class ClawdbotStack extends cdk.Stack {
       'curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -',
       'yum install -y nodejs',
       '',
-      '# Install Clawdbot',
-      'npm install -g clawdbot@latest',
+      '# Install Moltbot',
+      'npm install -g moltbot@latest',
       '',
       '# Create config directory',
-      'mkdir -p /home/ec2-user/.clawdbot',
-      'chown -R ec2-user:ec2-user /home/ec2-user/.clawdbot',
+      'mkdir -p /home/ec2-user/.moltbot',
+      'chown -R ec2-user:ec2-user /home/ec2-user/.moltbot',
       '',
       '# Get Telegram token from SSM',
-      `TELEGRAM_TOKEN=$(aws ssm get-parameter --name /clawdbot/telegram-token --with-decryption --region ${this.region} --query Parameter.Value --output text)`,
+      `TELEGRAM_TOKEN=$(aws ssm get-parameter --name /moltbot/telegram-token --with-decryption --region ${this.region} --query Parameter.Value --output text)`,
       '',
       '# Run onboarding as ec2-user',
-      'su - ec2-user -c "clawdbot onboard --install-daemon"',
+      'su - ec2-user -c "moltbot onboard --install-daemon"',
       '',
       '# Start gateway',
-      'systemctl --user enable clawdbot',
-      'systemctl --user start clawdbot'
+      'systemctl --user enable moltbot',
+      'systemctl --user start moltbot'
     );
 
     // EC2 Instance
-    const instance = new ec2.Instance(this, 'ClawdbotInstance', {
+    const instance = new ec2.Instance(this, 'MoltbotInstance', {
       vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
@@ -1788,9 +1788,9 @@ export class ClawdbotStack extends cdk.Stack {
     });
 
     // Budget Alert
-    new budgets.CfnBudget(this, 'ClawdbotBudget', {
+    new budgets.CfnBudget(this, 'MoltbotBudget', {
       budget: {
-        budgetName: 'Clawdbot-Monthly',
+        budgetName: 'Moltbot-Monthly',
         budgetLimit: {
           amount: 50,
           unit: 'USD'
@@ -1837,8 +1837,8 @@ export class ClawdbotStack extends cdk.Stack {
 # 4. Telegram Bot Token (get from @BotFather)
 
 # DEPLOYMENT (10 MINUTES)
-git clone https://github.com/YOUR_USERNAME/clawdbot-aws-cdk.git
-cd clawdbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
+cd moltbot-aws-cdk
 
 npm install
 
@@ -1856,10 +1856,10 @@ npx cdk deploy \
 aws ssm start-session --target i-XXXXXXXXXXXXX
 
 # Check status
-systemctl --user status clawdbot
+systemctl --user status moltbot
 
 # View logs
-journalctl --user -u clawdbot -f
+journalctl --user -u moltbot -f
 
 # DONE! Send a message to your Telegram bot.
 ```
