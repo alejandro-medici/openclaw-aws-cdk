@@ -1,0 +1,55 @@
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+# Local .env files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# CDK Context
+cdk.context.json
+
+# Secrets (just in case)
+*.pem
+*.key
+secrets.json
+
+# Claude local settings
+.claude/settings.local.json
+
+# AWS credentials (NEVER commit)
+.aws/
+credentials
+config
