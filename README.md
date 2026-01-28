@@ -1,12 +1,12 @@
-# Clawdbot AWS CDK
+# Moltbot AWS CDK
 
-**Production-ready Clawdbot deployment on AWS** - Security-first & Well-Architected
+**Production-ready Moltbot deployment on AWS** - Security-first & Well-Architected
 
-Deploy [Clawdbot](https://github.com/clawdbot/clawdbot) to AWS in 10 minutes with enterprise-grade security, cost controls, and zero inbound ports.
+Deploy [Moltbot](https://github.com/moltbot/moltbot) to AWS in 10 minutes with enterprise-grade security, cost controls, and zero inbound ports.
 
 ## Why This Solution?
 
-Clawdbot has **30K+ GitHub stars** but faces critical deployment challenges:
+Moltbot has **30K+ GitHub stars** but faces critical deployment challenges:
 - 🔴 **8 CRITICAL security vulnerabilities** in typical deployments
 - 💰 **$300 runaway cost incidents** reported on Hacker News
 - 🔐 **Plaintext secrets** in JSON config files
@@ -35,8 +35,8 @@ Clawdbot has **30K+ GitHub stars** but faces critical deployment challenges:
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/clawdbot-aws-cdk.git
-cd clawdbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
+cd moltbot-aws-cdk
 npm install
 
 # 2. Bootstrap CDK (first time only)
@@ -59,10 +59,10 @@ After deployment completes, CDK will show several outputs:
 aws ssm start-session --target i-xxxxx --region us-east-1
 
 # View live logs
-aws logs tail /clawdbot/gateway --follow --region us-east-1
+aws logs tail /moltbot/gateway --follow --region us-east-1
 
 # Check service status (once connected via Session Manager)
-sudo systemctl status clawdbot
+sudo systemctl status moltbot
 ```
 
 ### Test Your Bot
@@ -85,7 +85,7 @@ EC2 t3.micro (Amazon Linux 2023)
 ├─ IAM Role (Bedrock + SSM + CloudWatch) ✅
 ├─ SSM Session Manager (SSH replacement) ✅
 ├─ EBS encrypted (KMS) ✅
-└─ User Data → Installs Clawdbot
+└─ User Data → Installs Moltbot
     ↓
 SSM Parameter Store (KMS encrypted) ✅
     ↓
@@ -164,7 +164,7 @@ This solution follows AWS Well-Architected Framework:
 | **Cost Optimization** | Free Tier optimized, budget alerts, usage monitoring |
 | **Sustainability** | Single AZ, minimal resources, optimized regions |
 
-See [docs/clawdbot-aws-executive-brief.md](docs/clawdbot-aws-executive-brief.md) for detailed analysis.
+See [docs/moltbot-aws-executive-brief.md](docs/moltbot-aws-executive-brief.md) for detailed analysis.
 
 ## Troubleshooting
 
@@ -181,17 +181,17 @@ npx cdk deploy ...
 1. Check service status:
 ```bash
 aws ssm start-session --target i-xxxxx
-sudo systemctl status clawdbot
+sudo systemctl status moltbot
 ```
 
 2. View bootstrap logs:
 ```bash
-sudo tail -f /var/log/clawdbot-bootstrap.log
+sudo tail -f /var/log/moltbot-bootstrap.log
 ```
 
 3. Check CloudWatch logs:
 ```bash
-aws logs tail /clawdbot/gateway --follow
+aws logs tail /moltbot/gateway --follow
 ```
 
 ### Cost exceeded expectations
@@ -247,17 +247,17 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- [Clawdbot](https://github.com/clawdbot/clawdbot) - The amazing AI assistant this deploys
+- [Moltbot](https://github.com/moltbot/moltbot) - The amazing AI assistant this deploys
 - AWS CDK team - Infrastructure as Code framework
 - Community contributors - Thank you!
 
 ## Support
 
-- 📖 [Full Documentation](docs/clawdbot-aws-executive-brief.md)
+- 📖 [Full Documentation](docs/moltbot-aws-executive-brief.md)
 - 🏗️ [Architecture Diagrams](docs/architecture-diagrams.md)
-- 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues)
-- 🌟 [Star this repo](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk) if it helped you!
+- 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
+- 🌟 [Star this repo](https://github.com/YOUR_USERNAME/moltbot-aws-cdk) if it helped you!
 
 ---
 
-**Built with ❤️ by the community** | [Report an issue](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues) | [Request a feature](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues)
+**Built with ❤️ by the community** | [Report an issue](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues) | [Request a feature](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)

@@ -1,9 +1,9 @@
 {
-  "name": "clawdbot-aws-cdk",
+  "name": "moltbot-aws-cdk",
   "version": "0.1.0",
-  "description": "Production-ready Clawdbot deployment on AWS using CDK - Security-first & Free Tier optimized",
+  "description": "Production-ready Moltbot deployment on AWS using CDK - Security-first & Free Tier optimized",
   "bin": {
-    "clawdbot-aws-cdk": "bin/clawdbot-aws-cdk.js"
+    "moltbot-aws-cdk": "bin/moltbot-aws-cdk.js"
   },
   "scripts": {
     "build": "tsc",
@@ -16,6 +16,7 @@
     "destroy": "cdk destroy"
   },
   "keywords": [
+    "moltbot",
     "clawdbot",
     "aws",
     "cdk",

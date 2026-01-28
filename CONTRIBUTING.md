@@ -1,17 +1,17 @@
-# Contributing to Clawdbot AWS CDK
+# Contributing to Moltbot AWS CDK
 
-Thank you for considering contributing! This project aims to provide a production-ready, security-first AWS deployment for Clawdbot.
+Thank you for considering contributing! This project aims to provide a production-ready, security-first AWS deployment for Moltbot.
 
 ## Code of Conduct
 
-Be respectful, inclusive, and professional. We're all here to make deploying Clawdbot easier and more secure.
+Be respectful, inclusive, and professional. We're all here to make deploying Moltbot easier and more secure.
 
 ## How to Contribute
 
 ### Reporting Bugs
 
 Before creating a bug report:
-1. Check if the issue already exists in [GitHub Issues](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues)
+1. Check if the issue already exists in [GitHub Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
 2. Verify you're using the latest version
 3. Test with a clean AWS account if possible
 
@@ -43,8 +43,8 @@ Feature requests are welcome! Please include:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/clawdbot-aws-cdk.git
-cd clawdbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
+cd moltbot-aws-cdk
 
 # Install dependencies
 npm install
@@ -247,10 +247,10 @@ npx cdk destroy
 aws ec2 describe-security-groups --group-ids sg-xxxxx
 
 # Verify KMS encryption on SSM parameter
-aws ssm get-parameter --name /clawdbot/telegram-token --with-decryption
+aws ssm get-parameter --name /moltbot/telegram-token --with-decryption
 
 # Verify IAM role permissions (least privilege)
-aws iam get-role-policy --role-name ClawdbotGatewayRole
+aws iam get-role-policy --role-name MoltbotGatewayRole
 ```
 
 ## Release Process
@@ -265,9 +265,9 @@ aws iam get-role-policy --role-name ClawdbotGatewayRole
 
 ## Questions?
 
-- 💬 Open a [Discussion](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/discussions)
-- 🐛 Report a [Bug](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues/new?template=bug_report.md)
-- 💡 Suggest a [Feature](https://github.com/YOUR_USERNAME/clawdbot-aws-cdk/issues/new?template=feature_request.md)
+- 💬 Open a [Discussion](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- 🐛 Report a [Bug](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues/new?template=bug_report.md)
+- 💡 Suggest a [Feature](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues/new?template=feature_request.md)
 
 ## Recognition
 
@@ -283,4 +283,4 @@ By contributing, you agree that your contributions will be licensed under the [M
 
 ---
 
-**Thank you for making Clawdbot deployments better!** 🙏
+**Thank you for making Moltbot deployments better!** 🙏
