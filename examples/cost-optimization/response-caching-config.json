@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Moltbot Response Caching Configuration",
+  "description": "Configuration for caching Bedrock responses to reduce API costs by 20-30%",
+  "type": "object",
+  "properties": {
+    "cache": {
+      "type": "object",
+      "description": "Response caching configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable response caching"
+        },
+        "ttl": {
+          "type": "integer",
+          "default": 300,
+          "minimum": 60,
+          "maximum": 3600,
+          "description": "Cache time-to-live in seconds (300 = 5 minutes)"
+        },
+        "maxSize": {
+          "type": "integer",
+          "default": 100,
+          "minimum": 10,
+          "maximum": 1000,
+          "description": "Maximum number of cached responses"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["lru", "lfu", "fifo"],
+          "default": "lru",
+          "description": "Cache eviction strategy (lru = least recently used)"
+        },
+        "similarityThreshold": {
+          "type": "number",
+          "default": 0.9,
+          "minimum": 0.7,
+          "maximum": 1.0,
+          "description": "Similarity threshold for fuzzy matching (0.9 = 90% similar)"
+        },
+        "excludePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "password",
+            "secret",
+            "private",
+            "confidential",
+            "token",
+            "api key"
+          ],
+          "description": "Patterns to exclude from caching (case-insensitive)"
+        },
+        "includeUserContext": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include user ID in cache key (false = share cache across users)"
+        }
+      },
+      "required": ["enabled", "ttl", "maxSize", "strategy"]
+    }
+  },
+  "examples": [
+    {
+      "cache": {
+        "enabled": true,
+        "ttl": 300,
+        "maxSize": 100,
+        "strategy": "lru",
+        "similarityThreshold": 0.9,
+        "excludePatterns": ["password", "secret", "private"],
+        "includeUserContext": false
+      }
+    },
+    {
+      "cache": {
+        "enabled": true,
+        "ttl": 600,
+        "maxSize": 200,
+        "strategy": "lru",
+        "similarityThreshold": 0.85,
+        "excludePatterns": ["password", "secret", "api", "token"],
+        "includeUserContext": true
+      }
+    }
+  ]
+}
+
+/**
+ * USAGE INSTRUCTIONS
+ * ==================
+ *
+ * 1. Copy this config to your Moltbot instance:
+ *
+ *    INSTANCE_ID=$(aws cloudformation describe-stacks \
+ *      --stack-name MoltbotStack \
+ *      --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
+ *      --output text)
+ *
+ *    aws ssm start-session --target $INSTANCE_ID
+ *
+ *    sudo tee /home/moltbot/.moltbot/cache.json > /dev/null <<'EOF'
+ *    {
+ *      "cache": {
+ *        "enabled": true,
+ *        "ttl": 300,
+ *        "maxSize": 100,
+ *        "strategy": "lru",
+ *        "similarityThreshold": 0.9,
+ *        "excludePatterns": ["password", "secret", "private", "confidential", "token", "api key"],
+ *        "includeUserContext": false
+ *      }
+ *    }
+ *    EOF
+ *
+ *    sudo chown moltbot:moltbot /home/moltbot/.moltbot/cache.json
+ *    sudo systemctl restart moltbot
+ *    exit
+ *
+ * 2. Verify caching is working:
+ *
+ *    aws logs tail /moltbot/gateway --follow | grep -i cache
+ *
+ *    # Send same message twice, second should be cached
+ *    # Look for log entries like: "Cache hit: 87% similarity"
+ *
+ * 3. Monitor cache hit rate:
+ *
+ *    aws logs filter-log-events \
+ *      --log-group-name /moltbot/gateway \
+ *      --filter-pattern "cache" \
+ *      --start-time $(date -d '24 hours ago' +%s)000 \
+ *      | jq '.events[].message' | grep -c "Cache hit"
+ *
+ * COST SAVINGS
+ * =============
+ *
+ * Example: 100 messages/day
+ *   Without cache: 100 × $0.075 = $7.50/day = $225/month
+ *   With 30% cache hit: 70 × $0.075 = $5.25/day = $157.50/month
+ *   Savings: $67.50/month
+ *
+ * Cache hit rate depends on:
+ *   - TTL (longer = higher hit rate but staler data)
+ *   - similarityThreshold (lower = more hits but less accurate)
+ *   - Query patterns (FAQ-style = high, creative = low)
+ *
+ * CONFIGURATION TIPS
+ * ==================
+ *
+ * For FAQ bots (high repetition):
+ *   - TTL: 600-3600 seconds (10-60 minutes)
+ *   - similarityThreshold: 0.85-0.9
+ *   - includeUserContext: false (share across users)
+ *   - Expected hit rate: 40-60%
+ *
+ * For personal assistant (moderate repetition):
+ *   - TTL: 300-600 seconds (5-10 minutes)
+ *   - similarityThreshold: 0.9-0.95
+ *   - includeUserContext: true (per-user cache)
+ *   - Expected hit rate: 20-30%
+ *
+ * For creative/dynamic conversations:
+ *   - TTL: 180-300 seconds (3-5 minutes)
+ *   - similarityThreshold: 0.95
+ *   - includeUserContext: true
+ *   - Expected hit rate: 10-20%
+ *
+ * SECURITY CONSIDERATIONS
+ * =======================
+ *
+ * Ensure excludePatterns includes:
+ *   - Sensitive keywords (password, token, secret, api, etc.)
+ *   - PII patterns (email, phone, ssn, etc.)
+ *   - User-specific data
+ *
+ * If sharing cache across users (includeUserContext: false):
+ *   - Be careful with personalized responses
+ *   - May leak information between users
+ *   - Best for public FAQ-style bots only
+ *
+ * TROUBLESHOOTING
+ * ===============
+ *
+ * Cache not working:
+ *   - Check Moltbot logs: sudo journalctl -u moltbot -n 50
+ *   - Verify config file exists: ls -la /home/moltbot/.moltbot/cache.json
+ *   - Check permissions: should be owned by moltbot:moltbot with 600
+ *
+ * Low cache hit rate:
+ *   - Reduce similarityThreshold (0.9 → 0.85)
+ *   - Increase TTL (300 → 600 seconds)
+ *   - Check if excludePatterns too broad
+ *
+ * Stale responses:
+ *   - Reduce TTL (300 → 180 seconds)
+ *   - Increase similarityThreshold (0.9 → 0.95)
+ *   - Consider per-user caching (includeUserContext: true)
+ */

@@ -150,6 +150,7 @@ npx cdk deploy \
 - `InstanceType`: EC2 size (t3.micro default = Free Tier)
 - `MonthlyBudget`: Budget limit in USD (alert at 80%)
 - `EnableGuardrails`: Bedrock Guardrails for prompt injection protection
+- `BudgetAlertEmail`: Email address for budget alerts (optional)
 
 ## Well-Architected Compliance
 
@@ -164,7 +165,7 @@ This solution follows AWS Well-Architected Framework:
 | **Cost Optimization** | Free Tier optimized, budget alerts, usage monitoring |
 | **Sustainability** | Single AZ, minimal resources, optimized regions |
 
-See [docs/moltbot-aws-executive-brief.md](docs/moltbot-aws-executive-brief.md) for detailed analysis.
+See [docs/security-audit.md](docs/security-audit.md) for detailed security analysis.
 
 ## Troubleshooting
 
@@ -210,9 +211,9 @@ aws budgets update-budget --account-id YOUR_ACCOUNT --budget ...
 - ✅ Free Tier optimized
 - ✅ Basic monitoring & alerts
 - ✅ Quick start documentation
+- ✅ Bedrock Guardrails integration (v0.2.0)
 
 ### Phase 2: Enhanced Features (Next)
-- [ ] Bedrock Guardrails integration
 - [ ] Multi-region support
 - [ ] Advanced cost optimization
 - [ ] Backup & recovery automation
@@ -253,8 +254,10 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- 📖 [Full Documentation](docs/moltbot-aws-executive-brief.md)
-- 🏗️ [Architecture Diagrams](docs/architecture-diagrams.md)
+- 📖 [Deployment Guide](docs/deployment-guide.md)
+- 💰 [Cost Breakdown](docs/cost-breakdown.md)
+- 🔒 [Security Audit](docs/security-audit.md)
+- 🔧 [Troubleshooting](docs/troubleshooting.md)
 - 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
 - 🌟 [Star this repo](https://github.com/YOUR_USERNAME/moltbot-aws-cdk) if it helped you!
 
