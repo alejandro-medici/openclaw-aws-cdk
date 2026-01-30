@@ -1,15 +1,15 @@
 import * as cdk from 'aws-cdk-lib';
 import { Template, Match } from 'aws-cdk-lib/assertions';
-import { MoltbotStack } from '../lib/moltbot-stack';
+import { OpenClawStack } from '../lib/openclaw-stack';
 
-describe('MoltbotStack', () => {
+describe('OpenClawStack', () => {
   let app: cdk.App;
-  let stack: MoltbotStack;
+  let stack: OpenClawStack;
   let template: Template;
 
   beforeEach(() => {
     app = new cdk.App();
-    stack = new MoltbotStack(app, 'TestStack');
+    stack = new OpenClawStack(app, 'TestStack');
     template = Template.fromStack(stack);
   });
 
@@ -59,7 +59,7 @@ describe('MoltbotStack', () => {
 
     test('should have descriptive name', () => {
       template.hasResourceProperties('AWS::EC2::SecurityGroup', {
-        GroupName: 'moltbot-gateway-sg',
+        GroupName: 'openclaw-gateway-sg',
         GroupDescription: Match.stringLikeRegexp('.*Zero inbound.*')
       });
     });
@@ -139,7 +139,7 @@ describe('MoltbotStack', () => {
       expect(hasBedrockPolicy).toBe(true);
     });
 
-    test('should have SSM Parameter Store permissions scoped to /moltbot/*', () => {
+    test('should have SSM Parameter Store permissions scoped to /openclaw/*', () => {
       // Get the policy document
       const resources = template.toJSON().Resources;
       const policies = Object.values(resources).filter(
@@ -157,9 +157,9 @@ describe('MoltbotStack', () => {
           );
 
           if (hasSSMAction) {
-            // Check that resource is scoped to /moltbot/*
+            // Check that resource is scoped to /openclaw/*
             const resourceStr = JSON.stringify(stmt.Resource);
-            return resourceStr.includes('parameter/moltbot');
+            return resourceStr.includes('parameter/openclaw');
           }
           return false;
         });
@@ -168,7 +168,7 @@ describe('MoltbotStack', () => {
       expect(hasSSMPolicy).toBe(true);
     });
 
-    test('should have CloudWatch Logs permissions scoped to /moltbot/*', () => {
+    test('should have CloudWatch Logs permissions scoped to /openclaw/*', () => {
       template.hasResourceProperties('AWS::IAM::Policy', {
         PolicyDocument: {
           Statement: Match.arrayWith([
@@ -225,21 +225,21 @@ describe('MoltbotStack', () => {
   describe('SSM Parameters - Encrypted Secrets', () => {
     test('should store Telegram token as SecureString', () => {
       template.hasResourceProperties('AWS::SSM::Parameter', {
-        Name: '/moltbot/telegram-token',
+        Name: '/openclaw/telegram-token',
         Type: 'SecureString'
       });
     });
 
     test('should store Bedrock model as String', () => {
       template.hasResourceProperties('AWS::SSM::Parameter', {
-        Name: '/moltbot/bedrock-model',
+        Name: '/openclaw/bedrock-model',
         Type: 'String'
       });
     });
 
     test('should have descriptive parameter descriptions', () => {
       template.hasResourceProperties('AWS::SSM::Parameter', {
-        Name: '/moltbot/telegram-token',
+        Name: '/openclaw/telegram-token',
         Description: Match.stringLikeRegexp('.*KMS encrypted.*')
       });
     });
@@ -299,7 +299,7 @@ describe('MoltbotStack', () => {
         Tags: Match.arrayWith([
           Match.objectLike({
             Key: 'Application',
-            Value: 'Moltbot'
+            Value: 'OpenClaw'
           })
         ])
       });
@@ -333,7 +333,7 @@ describe('MoltbotStack', () => {
 
     test('should create CloudWatch Log Group', () => {
       template.hasResourceProperties('AWS::Logs::LogGroup', {
-        LogGroupName: '/moltbot/gateway',
+        LogGroupName: '/openclaw/gateway',
         RetentionInDays: 7
       });
     });
@@ -386,7 +386,7 @@ describe('MoltbotStack', () => {
         Budget: Match.objectLike({
           CostFilters: Match.objectLike({
             TagKeyValue: Match.arrayWith([
-              Match.stringLikeRegexp('.*Application.*Moltbot.*')
+              Match.stringLikeRegexp('.*Application.*OpenClaw.*')
             ])
           })
         })
@@ -467,7 +467,7 @@ describe('MoltbotStack', () => {
 
   describe('Bedrock Guardrails (when enabled)', () => {
     let guardedApp: cdk.App;
-    let guardedStack: MoltbotStack;
+    let guardedStack: OpenClawStack;
     let guardedTemplate: Template;
 
     beforeEach(() => {
@@ -476,7 +476,7 @@ describe('MoltbotStack', () => {
           'EnableGuardrails': 'true'
         }
       });
-      guardedStack = new MoltbotStack(guardedApp, 'GuardedStack');
+      guardedStack = new OpenClawStack(guardedApp, 'GuardedStack');
       guardedTemplate = Template.fromStack(guardedStack);
     });
 
@@ -489,7 +489,7 @@ describe('MoltbotStack', () => {
     // These tests verify the structure exists in the template
     test('should have Guardrail ID SSM parameter placeholder', () => {
       template.hasResourceProperties('AWS::SSM::Parameter', {
-        Name: '/moltbot/guardrail-id'
+        Name: '/openclaw/guardrail-id'
       });
     });
   });
@@ -522,7 +522,7 @@ describe('MoltbotStack', () => {
       template.hasResourceProperties('AWS::IAM::InstanceProfile', {
         Roles: Match.arrayWith([
           Match.objectLike({
-            Ref: Match.stringLikeRegexp('.*MoltbotInstanceRole.*')
+            Ref: Match.stringLikeRegexp('.*OpenClawInstanceRole.*')
           })
         ])
       });
@@ -627,7 +627,7 @@ describe('MoltbotStack', () => {
         Tags: Match.arrayWith([
           Match.objectLike({
             Key: 'Application',
-            Value: 'Moltbot'
+            Value: 'OpenClaw'
           })
         ])
       });

@@ -1,4 +1,4 @@
-# Moltbot AWS CDK - Troubleshooting Guide
+# OpenClaw AWS CDK - Troubleshooting Guide
 **Common Issues and Solutions**
 
 *Last Updated: January 2026*
@@ -86,7 +86,7 @@ npx cdk deploy --parameters TelegramBotToken=NEW_TOKEN_HERE
 
 **Symptom:**
 ```
-MoltbotStack | CREATE_FAILED | AWS::CloudFormation::Stack
+OpenClawStack | CREATE_FAILED | AWS::CloudFormation::Stack
 Rollback requested by user.
 ```
 
@@ -97,7 +97,7 @@ Rollback requested by user.
 1. Check specific failure:
 ```bash
 aws cloudformation describe-stack-events \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'StackEvents[?ResourceStatus==`CREATE_FAILED`]' \
   --output table
 ```
@@ -123,7 +123,7 @@ npx cdk deploy --parameters InstanceType=t3.small
 
 **Symptom:**
 ```
-❌ MoltbotStack failed: Error: This stack uses assets, so the toolkit stack must be deployed
+❌ OpenClawStack failed: Error: This stack uses assets, so the toolkit stack must be deployed
 ```
 
 **Cause:** CDK not bootstrapped in your account/region.
@@ -176,7 +176,7 @@ aws iam attach-user-policy \
 ```bash
 # 1. Check if instance is running
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
@@ -188,10 +188,10 @@ aws ec2 describe-instances \
 
 # 2. Check service status
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
-sudo systemctl status moltbot
+sudo systemctl status openclaw
 
 # 3. Check logs for errors
-sudo journalctl -u moltbot -n 50
+sudo journalctl -u openclaw -n 50
 ```
 
 **Common causes and fixes:**
@@ -199,23 +199,23 @@ sudo journalctl -u moltbot -n 50
 #### A. Service crashed
 ```bash
 # Check for crash
-sudo systemctl status moltbot
+sudo systemctl status openclaw
 
 # If "failed", check logs
-sudo journalctl -u moltbot -n 100 --no-pager
+sudo journalctl -u openclaw -n 100 --no-pager
 
 # Restart service
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 
 # Enable auto-restart on boot
-sudo systemctl enable moltbot
+sudo systemctl enable openclaw
 ```
 
 #### B. Token invalid/changed
 ```bash
 # Verify token in SSM
 aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --with-decryption \
   --query 'Parameter.Value' \
   --output text
@@ -225,14 +225,14 @@ curl https://api.telegram.org/bot<TOKEN>/getMe
 
 # If invalid, update:
 aws ssm put-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --value NEW_TOKEN \
   --type SecureString \
   --overwrite
 
 # Restart service
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -240,7 +240,7 @@ exit
 ```bash
 # Check CloudWatch for throttling
 aws logs filter-log-events \
-  --log-group-name /moltbot/gateway \
+  --log-group-name /openclaw/gateway \
   --filter-pattern "ThrottlingException" \
   --start-time $(date -d '1 hour ago' +%s)000
 
@@ -271,9 +271,9 @@ npx cdk deploy --parameters InstanceType=t3.small
 # Connect to instance
 aws ssm start-session --target $INSTANCE_ID
 
-# Clear Moltbot cache
-rm -rf /home/moltbot/.moltbot/cache/*
-sudo systemctl restart moltbot
+# Clear OpenClaw cache
+rm -rf /home/openclaw/.openclaw/cache/*
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -293,7 +293,7 @@ Error: connect ETIMEDOUT bedrock-runtime.us-east-1.amazonaws.com:443
 1. Check security group allows HTTPS outbound:
 ```bash
 SG_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroupId`].OutputValue' \
   --output text)
 
@@ -326,8 +326,8 @@ exit
 ```bash
 # Verify instance role has Bedrock access
 aws iam get-role-policy \
-  --role-name MoltbotGatewayRole \
-  --policy-name MoltbotGatewayRoleDefaultPolicy*
+  --role-name OpenClawGatewayRole \
+  --policy-name OpenClawGatewayRoleDefaultPolicy*
 
 # Should see bedrock:InvokeModel
 ```
@@ -438,7 +438,7 @@ aws ce get-cost-and-usage \
 
 # 3. Check for unexpected resources
 aws resourcegroupstaggingapi get-resources \
-  --tag-filters Key=Application,Values=Moltbot \
+  --tag-filters Key=Application,Values=OpenClaw \
   --query 'ResourceTagMappingList[].ResourceARN'
 ```
 
@@ -450,19 +450,19 @@ aws resourcegroupstaggingapi get-resources \
 ```bash
 # Check current model
 aws ssm get-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --query 'Parameter.Value' \
   --output text
 
 # If opus, switch to sonnet:
 aws ssm put-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --value anthropic.claude-sonnet-4-5-v2 \
   --overwrite
 
 # Restart
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -471,10 +471,10 @@ exit
 
 ```bash
 # View last 100 log entries
-aws logs tail /moltbot/gateway --since 1h | grep -c "bedrock:InvokeModel"
+aws logs tail /openclaw/gateway --since 1h | grep -c "bedrock:InvokeModel"
 
 # If >1000 calls/hour, investigate:
-aws logs tail /moltbot/gateway --since 1h --format short
+aws logs tail /openclaw/gateway --since 1h --format short
 
 # Look for repetitive patterns
 ```
@@ -488,7 +488,7 @@ aws logs tail /moltbot/gateway --since 1h --format short
 aws ec2 describe-nat-gateways \
   --query 'NatGateways[?State==`available`]'
 
-# If found, delete it (Moltbot doesn't need NAT)
+# If found, delete it (OpenClaw doesn't need NAT)
 aws ec2 delete-nat-gateway --nat-gateway-id nat-xxxxx
 ```
 
@@ -543,7 +543,7 @@ aws ec2 stop-instances --instance-ids $INSTANCE_ID
 **Diagnosis:**
 ```bash
 aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --query 'Parameter.Type' \
   --output text
 
@@ -556,22 +556,22 @@ aws ssm get-parameter \
 ```bash
 # Get current value
 TOKEN=$(aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --query 'Parameter.Value' \
   --output text)
 
 # Delete and recreate as SecureString
-aws ssm delete-parameter --name /moltbot/telegram-token
+aws ssm delete-parameter --name /openclaw/telegram-token
 
 aws ssm put-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --value "$TOKEN" \
   --type SecureString \
   --description "Telegram token (KMS encrypted)"
 
 # Restart service
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -584,7 +584,7 @@ exit
 **Check:**
 ```bash
 SG_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroupId`].OutputValue' \
   --output text)
 
@@ -632,7 +632,7 @@ npx cdk deploy --parameters InstanceType=t3.small
 **Check Bedrock latency:**
 ```bash
 aws logs insights start-query \
-  --log-group-name /moltbot/gateway \
+  --log-group-name /openclaw/gateway \
   --start-time $(date -d '1 hour ago' +%s) \
   --end-time $(date +%s) \
   --query-string 'fields @timestamp, bedrock_latency | stats avg(bedrock_latency) by bin(5m)'
@@ -646,14 +646,14 @@ aws logs insights start-query \
 
 ```bash
 #!/bin/bash
-# save as check-moltbot-health.sh
+# save as check-openclaw-health.sh
 
-echo "=== Moltbot Health Check ==="
+echo "=== OpenClaw Health Check ==="
 echo ""
 
 # Get instance ID
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
@@ -688,7 +688,7 @@ fi
 echo ""
 echo "Recent errors in logs:"
 aws logs filter-log-events \
-  --log-group-name /moltbot/gateway \
+  --log-group-name /openclaw/gateway \
   --filter-pattern "ERROR" \
   --start-time $(date -d '10 minutes ago' +%s)000 \
   --query 'events[*].message' \
@@ -700,8 +700,8 @@ echo "✅ Health check complete"
 
 **Run it:**
 ```bash
-chmod +x check-moltbot-health.sh
-./check-moltbot-health.sh
+chmod +x check-openclaw-health.sh
+./check-openclaw-health.sh
 ```
 
 ---
@@ -718,12 +718,12 @@ npx cdk --version
 
 # 2. Stack outputs
 aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs' \
   --output table
 
 # 3. Recent logs
-aws logs tail /moltbot/gateway --since 30m > moltbot-logs.txt
+aws logs tail /openclaw/gateway --since 30m > openclaw-logs.txt
 
 # 4. Instance details
 aws ec2 describe-instances \
@@ -733,24 +733,24 @@ aws ec2 describe-instances \
 
 # 5. Service status (if accessible)
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl status moltbot > service-status.txt
-sudo journalctl -u moltbot -n 100 > service-logs.txt
+sudo systemctl status openclaw > service-status.txt
+sudo journalctl -u openclaw -n 100 > service-logs.txt
 exit
 ```
 
 ### Support Channels
 
-1. **GitHub Issues**: [Create an issue](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
+1. **GitHub Issues**: [Create an issue](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
    - Include: CDK version, error message, relevant logs
    - Redact: Tokens, account IDs, personal info
 
-2. **GitHub Discussions**: [Ask a question](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+2. **GitHub Discussions**: [Ask a question](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 
 3. **AWS Support**: For AWS-specific issues (costs, quotas, etc.)
 
-4. **Moltbot Community**: For Moltbot-specific questions
-   - Discord: [Moltbot Discord](https://discord.gg/moltbot)
-   - GitHub: [Moltbot Issues](https://github.com/moltbot/moltbot/issues)
+4. **OpenClaw Community**: For OpenClaw-specific questions
+   - Discord: [OpenClaw Discord](https://discord.gg/openclaw)
+   - GitHub: [OpenClaw Issues](https://github.com/openclaw/openclaw/issues)
 
 ---
 

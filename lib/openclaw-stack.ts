@@ -7,7 +7,7 @@ import * as budgets from 'aws-cdk-lib/aws-budgets';
 import * as bedrock from 'aws-cdk-lib/aws-bedrock';
 import { Construct } from 'constructs';
 
-export class MoltbotStack extends cdk.Stack {
+export class OpenClawStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -69,7 +69,7 @@ export class MoltbotStack extends cdk.Stack {
     // Free Tier: VPCs are free, only resources inside cost money
     // ========================================
 
-    const vpc = new ec2.Vpc(this, 'MoltbotVPC', {
+    const vpc = new ec2.Vpc(this, 'OpenClawVPC', {
       maxAzs: 1,  // Single AZ = Free Tier friendly
       natGateways: 0,  // No NAT Gateway = Free (use IGW only)
       subnetConfiguration: [
@@ -87,11 +87,11 @@ export class MoltbotStack extends cdk.Stack {
     // SECURITY GROUP - NO INBOUND TRAFFIC!
     // ========================================
 
-    const securityGroup = new ec2.SecurityGroup(this, 'MoltbotSecurityGroup', {
+    const securityGroup = new ec2.SecurityGroup(this, 'OpenClawSecurityGroup', {
       vpc,
-      description: 'Moltbot Gateway - Zero inbound traffic (polling model)',
+      description: 'OpenClaw Gateway - Zero inbound traffic (polling model)',
       allowAllOutbound: true,
-      securityGroupName: 'moltbot-gateway-sg'
+      securityGroupName: 'openclaw-gateway-sg'
     });
 
     // Explicitly document: NO inbound rules = zero attack surface
@@ -101,14 +101,14 @@ export class MoltbotStack extends cdk.Stack {
     // IAM ROLE - Least Privilege
     // ========================================
 
-    const role = new iam.Role(this, 'MoltbotInstanceRole', {
+    const role = new iam.Role(this, 'OpenClawInstanceRole', {
       assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
-      description: 'IAM role for Moltbot EC2 instance - Bedrock + SSM + CloudWatch',
+      description: 'IAM role for OpenClaw EC2 instance - Bedrock + SSM + CloudWatch',
       managedPolicies: [
         // Session Manager access (SSH replacement)
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
       ],
-      roleName: 'MoltbotGatewayRole'
+      roleName: 'OpenClawGatewayRole'
     });
 
     // Bedrock permissions - only Anthropic models
@@ -133,7 +133,7 @@ export class MoltbotStack extends cdk.Stack {
         'ssm:GetParameters'
       ],
       resources: [
-        `arn:aws:ssm:${this.region}:${this.account}:parameter/moltbot/*`
+        `arn:aws:ssm:${this.region}:${this.account}:parameter/openclaw/*`
       ]
     }));
 
@@ -148,7 +148,7 @@ export class MoltbotStack extends cdk.Stack {
         'logs:DescribeLogStreams'
       ],
       resources: [
-        `arn:aws:logs:${this.region}:${this.account}:log-group:/moltbot/*`
+        `arn:aws:logs:${this.region}:${this.account}:log-group:/openclaw/*`
       ]
     }));
 
@@ -162,7 +162,7 @@ export class MoltbotStack extends cdk.Stack {
       resources: ['*'],
       conditions: {
         StringEquals: {
-          'cloudwatch:namespace': 'Moltbot'
+          'cloudwatch:namespace': 'OpenClaw'
         }
       }
     }));
@@ -172,16 +172,16 @@ export class MoltbotStack extends cdk.Stack {
     // ========================================
 
     const telegramTokenParameter = new ssm.StringParameter(this, 'TelegramTokenParameter', {
-      parameterName: '/moltbot/telegram-token',
+      parameterName: '/openclaw/telegram-token',
       stringValue: telegramToken.valueAsString,
       type: ssm.ParameterType.SECURE_STRING,
-      description: 'Telegram Bot Token for Moltbot (KMS encrypted)',
+      description: 'Telegram Bot Token for OpenClaw (KMS encrypted)',
       tier: ssm.ParameterTier.STANDARD
     });
 
     // Store Bedrock model selection
     new ssm.StringParameter(this, 'BedrockModelParameter', {
-      parameterName: '/moltbot/bedrock-model',
+      parameterName: '/openclaw/bedrock-model',
       stringValue: bedrockModel.valueAsString,
       type: ssm.ParameterType.STRING,
       description: 'Bedrock model identifier',
@@ -196,8 +196,8 @@ export class MoltbotStack extends cdk.Stack {
     let guardrailVersion: string | undefined;
 
     if (enableGuardrails.valueAsString === 'true') {
-      const guardrail = new bedrock.CfnGuardrail(this, 'MoltbotGuardrail', {
-        name: 'moltbot-security-guardrail',
+      const guardrail = new bedrock.CfnGuardrail(this, 'OpenClawGuardrail', {
+        name: 'openclaw-security-guardrail',
         description: 'Protects against prompt injection, inappropriate content, and data leakage',
         blockedInputMessaging: 'I cannot process this request due to security policies. Please rephrase your message.',
         blockedOutputsMessaging: 'I cannot provide that response due to content policies.',
@@ -341,9 +341,9 @@ export class MoltbotStack extends cdk.Stack {
         resources: [guardrail.attrGuardrailArn]
       }));
 
-      // Store Guardrail ID in SSM for Moltbot to use
+      // Store Guardrail ID in SSM for OpenClaw to use
       new ssm.StringParameter(this, 'GuardrailIdParameter', {
-        parameterName: '/moltbot/guardrail-id',
+        parameterName: '/openclaw/guardrail-id',
         stringValue: guardrailId,
         type: ssm.ParameterType.STRING,
         description: 'Bedrock Guardrail ID for security filtering',
@@ -351,7 +351,7 @@ export class MoltbotStack extends cdk.Stack {
       });
 
       new ssm.StringParameter(this, 'GuardrailVersionParameter', {
-        parameterName: '/moltbot/guardrail-version',
+        parameterName: '/openclaw/guardrail-version',
         stringValue: guardrailVersion,
         type: ssm.ParameterType.STRING,
         description: 'Bedrock Guardrail version',
@@ -359,14 +359,14 @@ export class MoltbotStack extends cdk.Stack {
       });
 
       // Tag for cost allocation
-      cdk.Tags.of(guardrail).add('Application', 'Moltbot');
+      cdk.Tags.of(guardrail).add('Application', 'OpenClaw');
       cdk.Tags.of(guardrail).add('CostCenter', 'AI-Security');
 
       // Add output for reference
       new cdk.CfnOutput(this, 'GuardrailId', {
         value: guardrailId,
         description: 'Bedrock Guardrail ID',
-        exportName: 'MoltbotGuardrailId',
+        exportName: 'OpenClawGuardrailId',
         condition: new cdk.CfnCondition(this, 'GuardrailsEnabled', {
           expression: cdk.Fn.conditionEquals(enableGuardrails, 'true')
         })
@@ -374,7 +374,7 @@ export class MoltbotStack extends cdk.Stack {
     } else {
       // If Guardrails not enabled, store empty value
       new ssm.StringParameter(this, 'GuardrailIdParameterDisabled', {
-        parameterName: '/moltbot/guardrail-id',
+        parameterName: '/openclaw/guardrail-id',
         stringValue: 'DISABLED',
         type: ssm.ParameterType.STRING,
         description: 'Guardrails disabled',
@@ -390,16 +390,16 @@ export class MoltbotStack extends cdk.Stack {
     userData.addCommands(
       '#!/bin/bash',
       'set -e',
-      'exec > >(tee /var/log/moltbot-bootstrap.log)',
+      'exec > >(tee /var/log/openclaw-bootstrap.log)',
       'exec 2>&1',
       '',
-      'echo "=== Moltbot Bootstrap Started ==="',
+      'echo "=== OpenClaw Bootstrap Started ==="',
       'date',
       '',
       '# Update system',
       'yum update -y',
       '',
-      '# Install Node.js 22 (required for Moltbot)',
+      '# Install Node.js 22 (required for OpenClaw)',
       'echo "Installing Node.js 22..."',
       'curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -',
       'yum install -y nodejs',
@@ -423,7 +423,7 @@ export class MoltbotStack extends cdk.Stack {
       '# Retrieve Telegram token from SSM',
       'echo "Retrieving Telegram token from SSM..."',
       'TELEGRAM_TOKEN=$(aws ssm get-parameter \\',
-      '  --name /moltbot/telegram-token \\',
+      '  --name /openclaw/telegram-token \\',
       '  --with-decryption \\',
       `  --region $REGION \\`,
       '  --query Parameter.Value \\',
@@ -436,26 +436,26 @@ export class MoltbotStack extends cdk.Stack {
       '',
       '# Retrieve Bedrock model',
       'BEDROCK_MODEL=$(aws ssm get-parameter \\',
-      '  --name /moltbot/bedrock-model \\',
+      '  --name /openclaw/bedrock-model \\',
       `  --region $REGION \\`,
       '  --query Parameter.Value \\',
       '  --output text)',
       '',
       'echo "Bedrock model: $BEDROCK_MODEL"',
       '',
-      '# Install Moltbot globally',
-      'echo "Installing Moltbot..."',
-      'npm install -g moltbot@latest',
+      '# Install OpenClaw globally',
+      'echo "Installing OpenClaw..."',
+      'npm install -g openclaw@latest',
       '',
-      '# Create moltbot user (run as non-root)',
-      'useradd -m -s /bin/bash moltbot || true',
+      '# Create openclaw user (run as non-root)',
+      'useradd -m -s /bin/bash openclaw || true',
       '',
       '# Create config directory',
-      'mkdir -p /home/moltbot/.moltbot',
-      'chown -R moltbot:moltbot /home/moltbot',
+      'mkdir -p /home/openclaw/.openclaw',
+      'chown -R openclaw:openclaw /home/openclaw',
       '',
-      '# Configure Moltbot for Bedrock',
-      'cat > /home/moltbot/.moltbot/config.json <<EOF',
+      '# Configure OpenClaw for Bedrock',
+      'cat > /home/openclaw/.openclaw/config.json <<EOF',
       '{',
       '  "ai": {',
       '    "provider": "bedrock",',
@@ -475,40 +475,40 @@ export class MoltbotStack extends cdk.Stack {
       '}',
       'EOF',
       '',
-      'chown moltbot:moltbot /home/moltbot/.moltbot/config.json',
-      'chmod 600 /home/moltbot/.moltbot/config.json',
+      'chown openclaw:openclaw /home/openclaw/.openclaw/config.json',
+      'chmod 600 /home/openclaw/.openclaw/config.json',
       '',
       '# Create systemd service',
-      'cat > /etc/systemd/system/moltbot.service <<EOF',
+      'cat > /etc/systemd/system/openclaw.service <<EOF',
       '[Unit]',
-      'Description=Moltbot AI Gateway',
+      'Description=OpenClaw AI Gateway',
       'After=network.target',
       '',
       '[Service]',
       'Type=simple',
-      'User=moltbot',
-      'WorkingDirectory=/home/moltbot',
-      'ExecStart=/usr/bin/moltbot start',
+      'User=openclaw',
+      'WorkingDirectory=/home/openclaw',
+      'ExecStart=/usr/bin/openclaw start',
       'Restart=always',
       'RestartSec=10',
       'StandardOutput=journal',
       'StandardError=journal',
-      'SyslogIdentifier=moltbot',
+      'SyslogIdentifier=openclaw',
       '',
       '[Install]',
       'WantedBy=multi-user.target',
       'EOF',
       '',
-      '# Start Moltbot service',
+      '# Start OpenClaw service',
       'systemctl daemon-reload',
-      'systemctl enable moltbot',
-      'systemctl start moltbot',
+      'systemctl enable openclaw',
+      'systemctl start openclaw',
       '',
       '# Verify service status',
       'sleep 5',
-      'systemctl status moltbot --no-pager',
+      'systemctl status openclaw --no-pager',
       '',
-      'echo "=== Moltbot Bootstrap Completed ==="',
+      'echo "=== OpenClaw Bootstrap Completed ==="',
       'date'
     );
 
@@ -516,7 +516,7 @@ export class MoltbotStack extends cdk.Stack {
     // EC2 INSTANCE - Amazon Linux 2023 + Encrypted EBS
     // ========================================
 
-    const instance = new ec2.Instance(this, 'MoltbotInstance', {
+    const instance = new ec2.Instance(this, 'OpenClawInstance', {
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC  // Free Tier eligible
@@ -537,11 +537,11 @@ export class MoltbotStack extends cdk.Stack {
         })
       }],
       requireImdsv2: true,  // Security: require IMDSv2
-      instanceName: 'moltbot-gateway'
+      instanceName: 'openclaw-gateway'
     });
 
     // Tag for cost allocation
-    cdk.Tags.of(instance).add('Application', 'Moltbot');
+    cdk.Tags.of(instance).add('Application', 'OpenClaw');
     cdk.Tags.of(instance).add('CostCenter', 'AI-Assistant');
 
     // ========================================
@@ -561,8 +561,8 @@ export class MoltbotStack extends cdk.Stack {
       }),
       threshold: 1,
       evaluationPeriods: 2,
-      alarmDescription: 'Alert when Moltbot instance fails health checks',
-      alarmName: 'moltbot-instance-health',
+      alarmDescription: 'Alert when OpenClaw instance fails health checks',
+      alarmName: 'openclaw-instance-health',
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     });
 
@@ -580,7 +580,7 @@ export class MoltbotStack extends cdk.Stack {
       threshold: 90,
       evaluationPeriods: 3,
       alarmDescription: 'Alert when CPU utilization exceeds 90% for 15 minutes',
-      alarmName: 'moltbot-cpu-high',
+      alarmName: 'openclaw-cpu-high',
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
     });
 
@@ -588,9 +588,9 @@ export class MoltbotStack extends cdk.Stack {
     // AWS BUDGETS - Cost Control
     // ========================================
 
-    new budgets.CfnBudget(this, 'MoltbotBudget', {
+    new budgets.CfnBudget(this, 'OpenClawBudget', {
       budget: {
-        budgetName: 'Moltbot-Monthly-Budget',
+        budgetName: 'OpenClaw-Monthly-Budget',
         budgetLimit: {
           amount: budgetAmount.valueAsNumber,
           unit: 'USD'
@@ -599,7 +599,7 @@ export class MoltbotStack extends cdk.Stack {
         budgetType: 'COST',
         costFilters: {
           TagKeyValue: [
-            `user:Application$Moltbot`
+            `user:Application$OpenClaw`
           ]
         }
       },
@@ -639,8 +639,8 @@ export class MoltbotStack extends cdk.Stack {
     // CLOUDWATCH LOG GROUP - Centralized Logging
     // ========================================
 
-    const logGroup = new cdk.aws_logs.LogGroup(this, 'MoltbotLogGroup', {
-      logGroupName: '/moltbot/gateway',
+    const logGroup = new cdk.aws_logs.LogGroup(this, 'OpenClawLogGroup', {
+      logGroupName: '/openclaw/gateway',
       retention: cdk.aws_logs.RetentionDays.ONE_WEEK,  // Free Tier: 5GB ingestion
       removalPolicy: cdk.RemovalPolicy.DESTROY  // Clean up on stack deletion
     });
@@ -652,43 +652,43 @@ export class MoltbotStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'InstanceId', {
       value: instance.instanceId,
       description: 'EC2 Instance ID',
-      exportName: 'MoltbotInstanceId'
+      exportName: 'OpenClawInstanceId'
     });
 
     new cdk.CfnOutput(this, 'InstancePublicIp', {
       value: instance.instancePublicIp,
       description: 'Public IP (for reference only - SSH disabled)',
-      exportName: 'MoltbotPublicIp'
+      exportName: 'OpenClawPublicIp'
     });
 
     new cdk.CfnOutput(this, 'ConnectCommand', {
       value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region}`,
       description: 'Command to connect via Session Manager (no SSH needed)',
-      exportName: 'MoltbotConnectCommand'
+      exportName: 'OpenClawConnectCommand'
     });
 
     new cdk.CfnOutput(this, 'LogsCommand', {
-      value: `aws logs tail /moltbot/gateway --follow --region ${this.region}`,
+      value: `aws logs tail /openclaw/gateway --follow --region ${this.region}`,
       description: 'Command to view live logs',
-      exportName: 'MoltbotLogsCommand'
+      exportName: 'OpenClawLogsCommand'
     });
 
     new cdk.CfnOutput(this, 'ServiceStatusCommand', {
-      value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region} && sudo systemctl status moltbot`,
-      description: 'Command to check Moltbot service status',
-      exportName: 'MoltbotStatusCommand'
+      value: `aws ssm start-session --target ${instance.instanceId} --region ${this.region} && sudo systemctl status openclaw`,
+      description: 'Command to check OpenClaw service status',
+      exportName: 'OpenClawStatusCommand'
     });
 
     new cdk.CfnOutput(this, 'TelegramTokenParameterArn', {
       value: telegramTokenParameter.parameterArn,
       description: 'SSM Parameter ARN for Telegram token (KMS encrypted)',
-      exportName: 'MoltbotTelegramTokenArn'
+      exportName: 'OpenClawTelegramTokenArn'
     });
 
     new cdk.CfnOutput(this, 'SecurityGroupId', {
       value: securityGroup.securityGroupId,
       description: 'Security Group ID (zero inbound rules)',
-      exportName: 'MoltbotSecurityGroupId'
+      exportName: 'OpenClawSecurityGroupId'
     });
 
     // ========================================
@@ -699,8 +699,8 @@ export class MoltbotStack extends cdk.Stack {
       value: [
         '✅ Deployment complete!',
         '1. Connect: Use Session Manager (see ConnectCommand output)',
-        '2. Logs: Check /var/log/moltbot-bootstrap.log for setup',
-        '3. Status: Run systemctl status moltbot',
+        '2. Logs: Check /var/log/openclaw-bootstrap.log for setup',
+        '3. Status: Run systemctl status openclaw',
         '4. Security: Zero inbound ports, KMS-encrypted secrets',
         '5. Cost: Monitor via AWS Budgets (alert at 80%)'
       ].join(' | '),

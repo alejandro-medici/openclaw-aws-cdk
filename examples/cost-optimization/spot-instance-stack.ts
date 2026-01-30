@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
-import { MoltbotStack } from '../../lib/moltbot-stack';
+import { OpenClawStack } from '../../lib/openclaw-stack';
 
 /**
  * Cost Optimization: Spot Instance Implementation
@@ -13,7 +13,7 @@ import { MoltbotStack } from '../../lib/moltbot-stack';
  *   npx cdk deploy --parameters TelegramBotToken=YOUR_TOKEN --parameters UseSpotInstances=true
  */
 
-export class MoltbotSpotStack extends cdk.Stack {
+export class OpenClawSpotStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -31,11 +31,11 @@ export class MoltbotSpotStack extends cdk.Stack {
       description: 'Maximum price for Spot Instance (USD/hour, default: $0.005 = 50% of On-Demand)'
     });
 
-    // ... rest of stack from moltbot-stack.ts ...
+    // ... rest of stack from openclaw-stack.ts ...
 
     // When creating EC2 instance, add spot configuration:
     /*
-    const instance = new ec2.Instance(this, 'MoltbotInstance', {
+    const instance = new ec2.Instance(this, 'OpenClawInstance', {
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC
@@ -56,7 +56,7 @@ export class MoltbotSpotStack extends cdk.Stack {
         })
       }],
       requireImdsv2: true,
-      instanceName: 'moltbot-gateway',
+      instanceName: 'openclaw-gateway',
 
       // SPOT INSTANCE CONFIGURATION
       spotOptions: useSpot.valueAsString === 'true' ? {
@@ -114,7 +114,7 @@ export class MoltbotSpotStack extends cdk.Stack {
  *     --query 'SpotInstanceRequests[*].{ID:SpotInstanceRequestId,Status:Status}'
  *
  * View interruption notices:
- *   aws logs tail /moltbot/gateway --filter "spot-interruption" --follow
+ *   aws logs tail /openclaw/gateway --filter "spot-interruption" --follow
  *
  * Calculate savings:
  *   Normal: 730 hours × $0.0104 = $7.59/month

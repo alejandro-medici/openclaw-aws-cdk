@@ -23,7 +23,7 @@ import { Construct } from 'constructs';
  *   Savings: $5.11/month
  */
 
-export class MoltbotScheduledShutdownStack extends cdk.Stack {
+export class OpenClawScheduledShutdownStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -125,8 +125,8 @@ def handler(event, context):
         minute: '0',
         weekDay: shutdownWeekends.valueAsString === 'true' ? 'MON-FRI' : '*'
       }),
-      description: `Stop Moltbot instance nightly at ${shutdownHour.valueAsString}:00`,
-      ruleName: 'moltbot-nightly-shutdown'
+      description: `Stop OpenClaw instance nightly at ${shutdownHour.valueAsString}:00`,
+      ruleName: 'openclaw-nightly-shutdown'
     });
 
     shutdownRule.addTarget(new targets.LambdaFunction(powerControlFunction, {
@@ -140,8 +140,8 @@ def handler(event, context):
         minute: '0',
         weekDay: shutdownWeekends.valueAsString === 'true' ? 'MON-FRI' : '*'
       }),
-      description: `Start Moltbot instance daily at ${startupHour.valueAsString}:00`,
-      ruleName: 'moltbot-morning-startup'
+      description: `Start OpenClaw instance daily at ${startupHour.valueAsString}:00`,
+      ruleName: 'openclaw-morning-startup'
     });
 
     startupRule.addTarget(new targets.LambdaFunction(powerControlFunction, {
@@ -156,8 +156,8 @@ def handler(event, context):
           minute: '0',
           weekDay: 'FRI'
         }),
-        description: 'Stop Moltbot instance for weekend',
-        ruleName: 'moltbot-weekend-shutdown'
+        description: 'Stop OpenClaw instance for weekend',
+        ruleName: 'openclaw-weekend-shutdown'
       });
 
       weekendShutdownRule.addTarget(new targets.LambdaFunction(powerControlFunction, {
@@ -170,8 +170,8 @@ def handler(event, context):
           minute: '0',
           weekDay: 'MON'
         }),
-        description: 'Start Moltbot instance on Monday morning',
-        ruleName: 'moltbot-monday-startup'
+        description: 'Start OpenClaw instance on Monday morning',
+        ruleName: 'openclaw-monday-startup'
       });
 
       mondayStartupRule.addTarget(new targets.LambdaFunction(powerControlFunction, {
@@ -207,17 +207,17 @@ def handler(event, context):
 /**
  * DEPLOYMENT INSTRUCTIONS
  *
- * 1. Deploy main Moltbot stack first:
- *    npx cdk deploy MoltbotStack
+ * 1. Deploy main OpenClaw stack first:
+ *    npx cdk deploy OpenClawStack
  *
  * 2. Get instance ID from outputs:
  *    INSTANCE_ID=$(aws cloudformation describe-stacks \
- *      --stack-name MoltbotStack \
+ *      --stack-name OpenClawStack \
  *      --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
  *      --output text)
  *
  * 3. Deploy this scheduling stack:
- *    npx cdk deploy MoltbotScheduledShutdownStack \
+ *    npx cdk deploy OpenClawScheduledShutdownStack \
  *      --parameters InstanceId=$INSTANCE_ID \
  *      --parameters ShutdownHour=22 \
  *      --parameters StartupHour=8 \
@@ -259,7 +259,7 @@ def handler(event, context):
  * TROUBLESHOOTING
  *
  * Check schedule:
- *   aws events list-rules --name-prefix moltbot
+ *   aws events list-rules --name-prefix openclaw
  *
  * View Lambda logs:
  *   aws logs tail /aws/lambda/PowerControlFunction --follow
@@ -271,6 +271,6 @@ def handler(event, context):
  *     response.json
  *
  * Disable schedule temporarily:
- *   aws events disable-rule --name moltbot-nightly-shutdown
- *   aws events disable-rule --name moltbot-morning-startup
+ *   aws events disable-rule --name openclaw-nightly-shutdown
+ *   aws events disable-rule --name openclaw-morning-startup
  */

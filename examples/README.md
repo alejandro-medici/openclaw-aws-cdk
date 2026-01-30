@@ -1,6 +1,6 @@
-# Moltbot AWS CDK - Examples
+# OpenClaw AWS CDK - Examples
 
-This directory contains example configurations, scripts, and use cases for Moltbot deployments.
+This directory contains example configurations, scripts, and use cases for OpenClaw deployments.
 
 ## Directory Structure
 
@@ -36,8 +36,8 @@ examples/
 
 ```bash
 # Clone and deploy with default settings
-git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
-cd moltbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+cd openclaw-aws-cdk
 npm install
 
 npx cdk deploy \
@@ -187,7 +187,7 @@ npx cdk synth
 npx cdk diff
 
 # Deploy to test stack first
-npx cdk deploy TestMoltbotStack \
+npx cdk deploy TestOpenClawStack \
   --parameters TelegramBotToken=TEST_TOKEN
 ```
 
@@ -200,7 +200,7 @@ curl -X POST "https://api.telegram.org/bot<TOKEN>/sendMessage" \
   -d "text=Test message"
 
 # Check logs
-aws logs tail /moltbot/gateway --since 5m
+aws logs tail /openclaw/gateway --since 5m
 
 # Verify response received
 ```
@@ -212,14 +212,14 @@ aws logs tail /moltbot/gateway --since 5m
 ```bash
 # Check instance status
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
 aws ec2 describe-instance-status --instance-ids $INSTANCE_ID
 
 # Check service logs
-aws logs tail /moltbot/gateway --follow
+aws logs tail /openclaw/gateway --follow
 ```
 
 ### Debug Cost Issues
@@ -238,7 +238,7 @@ aws ce get-cost-and-usage \
   --granularity MONTHLY \
   --metrics BlendedCost \
   --group-by Type=SERVICE \
-  --filter file://<(echo '{"Tags":{"Key":"Application","Values":["Moltbot"]}}')
+  --filter file://<(echo '{"Tags":{"Key":"Application","Values":["OpenClaw"]}}')
 ```
 
 ## Advanced Configurations
@@ -246,7 +246,7 @@ aws ce get-cost-and-usage \
 ### Custom Bedrock Configuration
 
 ```json
-// /home/moltbot/.moltbot/config.json
+// /home/openclaw/.openclaw/config.json
 {
   "ai": {
     "provider": "bedrock",
@@ -263,11 +263,11 @@ aws ce get-cost-and-usage \
 
 ```typescript
 // examples/multi-environment/prod-stack.ts
-new MoltbotStack(app, 'MoltbotProd-US', {
+new OpenClawStack(app, 'OpenClawProd-US', {
   env: { region: 'us-east-1' }
 });
 
-new MoltbotStack(app, 'MoltbotProd-EU', {
+new OpenClawStack(app, 'OpenClawProd-EU', {
   env: { region: 'eu-west-1' }
 });
 ```
@@ -278,7 +278,7 @@ new MoltbotStack(app, 'MoltbotProd-EU', {
 
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy Moltbot
+name: Deploy OpenClaw
 on:
   push:
     branches: [main]
@@ -300,8 +300,8 @@ jobs:
 
 For questions about these examples:
 - 📖 [Main Documentation](../README.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
+- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
 
 ## Contributing
 

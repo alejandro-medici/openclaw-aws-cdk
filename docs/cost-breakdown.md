@@ -1,4 +1,4 @@
-# Moltbot AWS CDK - Cost Breakdown
+# OpenClaw AWS CDK - Cost Breakdown
 **Detailed Cost Analysis and Optimization Guide**
 
 *Last Updated: January 2026*
@@ -289,19 +289,19 @@ echo "Year 2+ total: \$${TOTAL_YEAR2}/month"
 ```bash
 # Check current model
 aws ssm get-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --query 'Parameter.Value' \
   --output text
 
 # Switch to Sonnet
 aws ssm put-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --value anthropic.claude-sonnet-4-5-v2 \
   --overwrite
 
 # Restart service
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -314,8 +314,8 @@ exit
 **Savings: 70% on EC2 costs**
 
 ```typescript
-// lib/moltbot-stack.ts - modify instance creation
-const instance = new ec2.Instance(this, 'MoltbotInstance', {
+// lib/openclaw-stack.ts - modify instance creation
+const instance = new ec2.Instance(this, 'OpenClawInstance', {
   // ... existing config ...
   spotOptions: {
     requestType: ec2.SpotRequestType.PERSISTENT,
@@ -355,9 +355,9 @@ const instance = new ec2.Instance(this, 'MoltbotInstance', {
 **Savings: $0.20-0.30/month**
 
 ```typescript
-// lib/moltbot-stack.ts - modify log group
-const logGroup = new cdk.aws_logs.LogGroup(this, 'MoltbotLogGroup', {
-  logGroupName: '/moltbot/gateway',
+// lib/openclaw-stack.ts - modify log group
+const logGroup = new cdk.aws_logs.LogGroup(this, 'OpenClawLogGroup', {
+  logGroupName: '/openclaw/gateway',
   retention: cdk.aws_logs.RetentionDays.THREE_DAYS,  // Was: ONE_WEEK
   removalPolicy: cdk.RemovalPolicy.DESTROY
 });
@@ -371,7 +371,7 @@ const logGroup = new cdk.aws_logs.LogGroup(this, 'MoltbotLogGroup', {
 **Savings: 20-30% on Bedrock costs** for repetitive queries
 
 ```json
-// Add to /home/moltbot/.moltbot/config.json
+// Add to /home/openclaw/.openclaw/config.json
 {
   "cache": {
     "enabled": true,
@@ -395,12 +395,12 @@ const logGroup = new cdk.aws_logs.LogGroup(this, 'MoltbotLogGroup', {
 # Verify it's working:
 aws budgets describe-budgets \
   --account-id $(aws sts get-caller-identity --query Account --output text) \
-  --query 'Budgets[?BudgetName==`Moltbot-Monthly-Budget`]'
+  --query 'Budgets[?BudgetName==`OpenClaw-Monthly-Budget`]'
 
 # Add additional alert at 100%
 aws budgets create-notification \
   --account-id $(aws sts get-caller-identity --query Account --output text) \
-  --budget-name Moltbot-Monthly-Budget \
+  --budget-name OpenClaw-Monthly-Budget \
   --notification NotificationType=ACTUAL,ComparisonOperator=GREATER_THAN,Threshold=100,ThresholdType=PERCENTAGE \
   --subscribers SubscriptionType=EMAIL,Address=your-email@example.com
 ```
@@ -411,7 +411,7 @@ aws budgets create-notification \
 # Create script: check-daily-costs.sh
 #!/bin/bash
 
-echo "=== Moltbot Daily Costs ==="
+echo "=== OpenClaw Daily Costs ==="
 echo ""
 
 # Today's cost
@@ -423,7 +423,7 @@ aws ce get-cost-and-usage \
 {
   "Tags": {
     "Key": "Application",
-    "Values": ["Moltbot"]
+    "Values": ["OpenClaw"]
   }
 }
 EOF
@@ -440,7 +440,7 @@ aws ce get-cost-and-usage \
 {
   "Tags": {
     "Key": "Application",
-    "Values": ["Moltbot"]
+    "Values": ["OpenClaw"]
   }
 }
 EOF
@@ -471,7 +471,7 @@ EOF
 ```bash
 # Create custom dashboard
 aws cloudwatch put-dashboard \
-  --dashboard-name Moltbot-Costs \
+  --dashboard-name OpenClaw-Costs \
   --dashboard-body file://dashboard.json
 
 # dashboard.json:

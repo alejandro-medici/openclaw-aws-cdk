@@ -1,4 +1,4 @@
-# Moltbot AWS CDK - Project Plan
+# OpenClaw AWS CDK - Project Plan
 
 **Status:** Phase 1 (MVP) Complete ✅
 **Last Updated:** January 26, 2026
@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-Production-ready Moltbot deployment on AWS using CDK. Security-first approach addressing 8 critical vulnerabilities in typical deployments. Target: 1,000-1,500 AWS users avoiding NixOS complexity.
+Production-ready OpenClaw deployment on AWS using CDK. Security-first approach addressing 8 critical vulnerabilities in typical deployments. Target: 1,000-1,500 AWS users avoiding NixOS complexity.
 
 ## Objectives
 
@@ -39,7 +39,7 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
   - [x] IAM Role (Bedrock + SSM + CloudWatch)
   - [x] SSM Parameter Store (KMS encrypted)
   - [x] EC2 t3.micro (Amazon Linux 2023)
-  - [x] User data script (Moltbot installation)
+  - [x] User data script (OpenClaw installation)
   - [x] CloudWatch Alarms (health + CPU)
   - [x] AWS Budgets (cost alerts)
   - [x] CloudWatch Log Group
@@ -64,7 +64,7 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 
 **Testing:**
 - [ ] Test deployment in clean AWS account
-- [ ] Verify Moltbot starts correctly
+- [ ] Verify OpenClaw starts correctly
 - [ ] Test Telegram bot connectivity
 - [ ] Verify SSM Session Manager access
 - [ ] Test CloudWatch logs collection
@@ -113,11 +113,11 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 
 **Launch Activities:**
 - [ ] GitHub repo public release
-- [ ] Blog post: "Production Moltbot on AWS" (DEV.to)
-- [ ] Post in Moltbot Discord (#deployment channel)
-- [ ] Submit to awesome-moltbot-skills
+- [ ] Blog post: "Production OpenClaw on AWS" (DEV.to)
+- [ ] Post in OpenClaw Discord (#deployment channel)
+- [ ] Submit to awesome-openclaw-skills
 - [ ] Reddit posts (r/aws, r/selfhosted)
-- [ ] Hacker News: "Show HN: AWS CDK for Moltbot"
+- [ ] Hacker News: "Show HN: AWS CDK for OpenClaw"
 
 **Success Metrics (Month 1):**
 - Target: 200+ GitHub stars
@@ -184,7 +184,7 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 
 5. **User Data vs Custom AMI**
    - Decision: User data script
-   - Rationale: Simpler maintenance, always latest Moltbot version
+   - Rationale: Simpler maintenance, always latest OpenClaw version
    - Trade-off: Slower first boot (~2-3 minutes)
 
 ### Future Decisions Needed
@@ -203,7 +203,7 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| Moltbot breaking changes | HIGH | Pin to stable versions, test before updating |
+| OpenClaw breaking changes | HIGH | Pin to stable versions, test before updating |
 | AWS Free Tier exhaustion | MEDIUM | Budget alerts, usage monitoring, clear warnings |
 | Bedrock service limits | LOW | Document quotas, implement retry logic |
 | User misconfiguration | HIGH | Validation in CDK, clear error messages |
@@ -212,7 +212,7 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| Moltbot loses popularity | HIGH | Focus on general Bedrock patterns, not just Moltbot |
+| OpenClaw loses popularity | HIGH | Focus on general Bedrock patterns, not just OpenClaw |
 | Official AWS solution launches | MEDIUM | First-mover advantage, community-first positioning |
 | Clawdinators improves UX | MEDIUM | Differentiate on simplicity + security |
 | Bedrock price increase | MEDIUM | Document cost optimization, alternative models |
@@ -232,13 +232,13 @@ Production-ready Moltbot deployment on AWS using CDK. Security-first approach ad
 - [ ] 100+ GitHub stars (Week 2)
 - [ ] 10+ successful deployments
 - [ ] 0 critical security issues
-- [ ] Featured in Moltbot Discord
+- [ ] Featured in OpenClaw Discord
 
 ### Phase 3 (Growth)
 - [ ] 500+ GitHub stars (Month 3)
 - [ ] 50+ active deployments
 - [ ] 5+ external contributors
-- [ ] Referenced in Moltbot official docs
+- [ ] Referenced in OpenClaw official docs
 
 ### Long-term (Month 6)
 - [ ] 1,000+ GitHub stars
@@ -303,12 +303,12 @@ Will track here:
 ## Resources
 
 ### Internal Docs
-- [Executive Brief](../docs/moltbot-aws-executive-brief.md) - Full strategy
+- [Executive Brief](../docs/openclaw-aws-executive-brief.md) - Full strategy
 - [Architecture Diagrams](../docs/architecture-diagrams.md) - Visual references
 - [README](../README.md) - User-facing quick start
 
 ### External References
-- [Moltbot GitHub](https://github.com/moltbot/moltbot)
+- [OpenClaw GitHub](https://github.com/openclaw/openclaw)
 - [AWS CDK Best Practices](https://docs.aws.amazon.com/cdk/latest/guide/best-practices.html)
 - [Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)

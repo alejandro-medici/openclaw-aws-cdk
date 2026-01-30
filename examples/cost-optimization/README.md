@@ -1,6 +1,6 @@
 # Cost Optimization Examples
 
-This directory contains advanced cost optimization strategies for Moltbot deployments.
+This directory contains advanced cost optimization strategies for OpenClaw deployments.
 
 ## Optimization Strategies
 
@@ -56,7 +56,7 @@ npx cdk deploy \
 
 ```bash
 # Use the complete optimized stack
-cp examples/cost-optimization/fully-optimized-stack.ts lib/moltbot-stack.ts
+cp examples/cost-optimization/fully-optimized-stack.ts lib/openclaw-stack.ts
 
 # Deploy with all optimizations
 npx cdk deploy \
@@ -75,14 +75,14 @@ npx cdk deploy --parameters TelegramBotToken=YOUR_TOKEN
 
 # Connect and configure caching
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
 aws ssm start-session --target $INSTANCE_ID
 
 # On instance:
-sudo cat > /home/moltbot/.moltbot/cache.json <<'EOF'
+sudo cat > /home/openclaw/.openclaw/cache.json <<'EOF'
 {
   "enabled": true,
   "ttl": 300,
@@ -91,8 +91,8 @@ sudo cat > /home/moltbot/.moltbot/cache.json <<'EOF'
 }
 EOF
 
-sudo chown moltbot:moltbot /home/moltbot/.moltbot/cache.json
-sudo systemctl restart moltbot
+sudo chown openclaw:openclaw /home/openclaw/.openclaw/cache.json
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -179,7 +179,7 @@ aws ce get-cost-and-usage \
   --time-period Start=$(date -d '60 days ago' +%Y-%m-%d),End=$(date +%Y-%m-%d) \
   --granularity MONTHLY \
   --metrics BlendedCost \
-  --filter file://<(echo '{"Tags":{"Key":"Application","Values":["Moltbot"]}}')
+  --filter file://<(echo '{"Tags":{"Key":"Application","Values":["OpenClaw"]}}')
 
 # Check Bedrock usage reduction
 aws cloudwatch get-metric-statistics \
@@ -197,7 +197,7 @@ aws cloudwatch get-metric-statistics \
 ```bash
 # Use CloudWatch dashboard template
 aws cloudwatch put-dashboard \
-  --dashboard-name Moltbot-Cost-Tracking \
+  --dashboard-name OpenClaw-Cost-Tracking \
   --dashboard-body file://examples/cost-optimization/cost-dashboard.json
 ```
 
@@ -253,7 +253,7 @@ npx cdk deploy \
 
 Questions about cost optimization?
 - 📖 [Cost Breakdown Guide](../../docs/cost-breakdown.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 - 📊 [AWS Cost Explorer](https://console.aws.amazon.com/cost-management/home)
 
 ---

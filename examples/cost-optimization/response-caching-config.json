@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Moltbot Response Caching Configuration",
+  "title": "OpenClaw Response Caching Configuration",
   "description": "Configuration for caching Bedrock responses to reduce API costs by 20-30%",
   "type": "object",
   "properties": {
@@ -94,16 +94,16 @@
  * USAGE INSTRUCTIONS
  * ==================
  *
- * 1. Copy this config to your Moltbot instance:
+ * 1. Copy this config to your OpenClaw instance:
  *
  *    INSTANCE_ID=$(aws cloudformation describe-stacks \
- *      --stack-name MoltbotStack \
+ *      --stack-name OpenClawStack \
  *      --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
  *      --output text)
  *
  *    aws ssm start-session --target $INSTANCE_ID
  *
- *    sudo tee /home/moltbot/.moltbot/cache.json > /dev/null <<'EOF'
+ *    sudo tee /home/openclaw/.openclaw/cache.json > /dev/null <<'EOF'
  *    {
  *      "cache": {
  *        "enabled": true,
@@ -117,13 +117,13 @@
  *    }
  *    EOF
  *
- *    sudo chown moltbot:moltbot /home/moltbot/.moltbot/cache.json
- *    sudo systemctl restart moltbot
+ *    sudo chown openclaw:openclaw /home/openclaw/.openclaw/cache.json
+ *    sudo systemctl restart openclaw
  *    exit
  *
  * 2. Verify caching is working:
  *
- *    aws logs tail /moltbot/gateway --follow | grep -i cache
+ *    aws logs tail /openclaw/gateway --follow | grep -i cache
  *
  *    # Send same message twice, second should be cached
  *    # Look for log entries like: "Cache hit: 87% similarity"
@@ -131,7 +131,7 @@
  * 3. Monitor cache hit rate:
  *
  *    aws logs filter-log-events \
- *      --log-group-name /moltbot/gateway \
+ *      --log-group-name /openclaw/gateway \
  *      --filter-pattern "cache" \
  *      --start-time $(date -d '24 hours ago' +%s)000 \
  *      | jq '.events[].message' | grep -c "Cache hit"
@@ -187,9 +187,9 @@
  * ===============
  *
  * Cache not working:
- *   - Check Moltbot logs: sudo journalctl -u moltbot -n 50
- *   - Verify config file exists: ls -la /home/moltbot/.moltbot/cache.json
- *   - Check permissions: should be owned by moltbot:moltbot with 600
+ *   - Check OpenClaw logs: sudo journalctl -u openclaw -n 50
+ *   - Verify config file exists: ls -la /home/openclaw/.openclaw/cache.json
+ *   - Check permissions: should be owned by openclaw:openclaw with 600
  *
  * Low cache hit rate:
  *   - Reduce similarityThreshold (0.9 → 0.85)

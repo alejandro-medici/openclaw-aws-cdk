@@ -1,4 +1,4 @@
-# Moltbot AWS CDK - Deployment Guide
+# OpenClaw AWS CDK - Deployment Guide
 **Complete Step-by-Step Instructions**
 
 *Last Updated: January 2026*
@@ -146,15 +146,15 @@ aws bedrock list-foundation-models --region us-east-1 --query 'modelSummaries[?c
 
 ```bash
 # Create IAM user with necessary permissions
-aws iam create-user --user-name moltbot-deployer
+aws iam create-user --user-name openclaw-deployer
 
 # Attach administrator policy (for deployment)
 aws iam attach-user-policy \
-  --user-name moltbot-deployer \
+  --user-name openclaw-deployer \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 
 # Create access keys
-aws iam create-access-key --user-name moltbot-deployer
+aws iam create-access-key --user-name openclaw-deployer
 
 # Save the output! You'll need:
 # - AccessKeyId
@@ -188,8 +188,8 @@ aws sts get-caller-identity
 
 ```bash
 # Clone from GitHub
-git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
-cd moltbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+cd openclaw-aws-cdk
 
 # Verify files
 ls -la
@@ -234,10 +234,10 @@ npm run build
 3. Follow the prompts:
    ```
    BotFather: Alright, a new bot. How are we going to call it?
-   You: My Moltbot Assistant
+   You: My OpenClaw Assistant
 
    BotFather: Good. Now let's choose a username for your bot.
-   You: my_moltbot_assistant_bot
+   You: my_openclaw_assistant_bot
 
    BotFather: Done! Here is your token:
    1234567890:ABCdefGHIjklMNOpqrsTUVwxyz1234567890
@@ -252,7 +252,7 @@ npm run build
 My personal AI assistant powered by Claude
 
 /setabouttext - Set about text
-Moltbot on AWS - Secure, scalable AI assistant
+OpenClaw on AWS - Secure, scalable AI assistant
 
 /setuserpic - Upload a profile picture
 
@@ -274,8 +274,8 @@ curl https://api.telegram.org/bot<YOUR_TOKEN>/getMe
 #   "result": {
 #     "id": 1234567890,
 #     "is_bot": true,
-#     "first_name": "My Moltbot Assistant",
-#     "username": "my_moltbot_assistant_bot"
+#     "first_name": "My OpenClaw Assistant",
+#     "username": "my_openclaw_assistant_bot"
 #   }
 # }
 ```
@@ -380,7 +380,7 @@ npx cdk deploy \
 ```bash
 # Watch CloudFormation events in real-time
 aws cloudformation describe-stack-events \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --region us-east-1 \
   --query 'StackEvents[0:10].[ResourceStatus,ResourceType,LogicalResourceId]' \
   --output table
@@ -393,19 +393,19 @@ aws cloudformation describe-stack-events \
 After successful deployment, you'll see:
 
 ```
-✅ MoltbotStack
+✅ OpenClawStack
 
 Outputs:
-MoltbotStack.ConnectCommand = aws ssm start-session --target i-0abc123def456 --region us-east-1
-MoltbotStack.InstanceId = i-0abc123def456
-MoltbotStack.InstancePublicIp = 54.123.45.67
-MoltbotStack.LogsCommand = aws logs tail /moltbot/gateway --follow --region us-east-1
-MoltbotStack.SecurityGroupId = sg-0123456789abcdef
-MoltbotStack.ServiceStatusCommand = aws ssm start-session --target i-0abc123def456...
-MoltbotStack.TelegramTokenParameterArn = arn:aws:ssm:us-east-1:123456789012:parameter/moltbot/telegram-token
+OpenClawStack.ConnectCommand = aws ssm start-session --target i-0abc123def456 --region us-east-1
+OpenClawStack.InstanceId = i-0abc123def456
+OpenClawStack.InstancePublicIp = 54.123.45.67
+OpenClawStack.LogsCommand = aws logs tail /openclaw/gateway --follow --region us-east-1
+OpenClawStack.SecurityGroupId = sg-0123456789abcdef
+OpenClawStack.ServiceStatusCommand = aws ssm start-session --target i-0abc123def456...
+OpenClawStack.TelegramTokenParameterArn = arn:aws:ssm:us-east-1:123456789012:parameter/openclaw/telegram-token
 
 Stack ARN:
-arn:aws:cloudformation:us-east-1:123456789012:stack/MoltbotStack/12345678-1234-1234-1234-123456789012
+arn:aws:cloudformation:us-east-1:123456789012:stack/OpenClawStack/12345678-1234-1234-1234-123456789012
 ```
 
 **SAVE THESE OUTPUTS!** You'll need them for management.
@@ -419,7 +419,7 @@ arn:aws:cloudformation:us-east-1:123456789012:stack/MoltbotStack/12345678-1234-1
 ```bash
 # Get instance ID from outputs
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
@@ -441,31 +441,31 @@ aws ec2 describe-instances \
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
 
 # Once connected, view bootstrap log
-sudo tail -f /var/log/moltbot-bootstrap.log
+sudo tail -f /var/log/openclaw-bootstrap.log
 
 # Look for:
-# "=== Moltbot Bootstrap Completed ==="
+# "=== OpenClaw Bootstrap Completed ==="
 
 # Exit with: exit
 ```
 
-### 6.3 Check Moltbot Service Status
+### 6.3 Check OpenClaw Service Status
 
 ```bash
 # Connect to instance
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
 
 # Check service
-sudo systemctl status moltbot
+sudo systemctl status openclaw
 
 # Expected output:
-# ● moltbot.service - Moltbot AI Gateway
-#    Loaded: loaded (/etc/systemd/system/moltbot.service; enabled)
+# ● openclaw.service - OpenClaw AI Gateway
+#    Loaded: loaded (/etc/systemd/system/openclaw.service; enabled)
 #    Active: active (running) since ...
 #    Main PID: 1234 (node)
 
 # View live logs
-sudo journalctl -u moltbot -f
+sudo journalctl -u openclaw -f
 
 # Exit with: Ctrl+C, then exit
 ```
@@ -475,12 +475,12 @@ sudo journalctl -u moltbot -f
 ```bash
 # List log streams
 aws logs describe-log-streams \
-  --log-group-name /moltbot/gateway \
+  --log-group-name /openclaw/gateway \
   --order-by LastEventTime \
   --descending
 
 # View recent logs
-aws logs tail /moltbot/gateway --follow --region us-east-1
+aws logs tail /openclaw/gateway --follow --region us-east-1
 
 # Look for:
 # - "Telegram polling started"
@@ -493,7 +493,7 @@ aws logs tail /moltbot/gateway --follow --region us-east-1
 ```bash
 # Verify encrypted token is stored
 aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --with-decryption \
   --region us-east-1 \
   --query 'Parameter.Value' \
@@ -503,7 +503,7 @@ aws ssm get-parameter \
 
 # Verify Bedrock model
 aws ssm get-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --region us-east-1 \
   --query 'Parameter.Value' \
   --output text
@@ -518,12 +518,12 @@ aws ssm get-parameter \
 ### 7.1 Initial Bot Test
 
 1. Open Telegram
-2. Search for your bot username (e.g., `@my_moltbot_assistant_bot`)
+2. Search for your bot username (e.g., `@my_openclaw_assistant_bot`)
 3. Start a conversation with `/start`
 
 **Expected response:**
 ```
-Hello! I'm your Moltbot assistant powered by Claude.
+Hello! I'm your OpenClaw assistant powered by Claude.
 
 Due to security settings (DM pairing), I need your approval before we can chat.
 
@@ -544,7 +544,7 @@ I'm ready to help you. What can I do for you today?
 ```
 You: Hello! Can you help me?
 
-Bot: Hello! I'm Claude, your AI assistant running on Moltbot.
+Bot: Hello! I'm Claude, your AI assistant running on OpenClaw.
 I'd be happy to help you! I can assist with:
 - Answering questions
 - Writing and editing text
@@ -561,7 +561,7 @@ What would you like help with today?
 ```
 You: What model are you?
 
-Bot: I'm Claude Sonnet 4.5, running on Amazon Bedrock through Moltbot.
+Bot: I'm Claude Sonnet 4.5, running on Amazon Bedrock through OpenClaw.
 This is a secure, AWS-hosted deployment with zero inbound ports and
 KMS-encrypted secrets. How can I assist you today?
 ```
@@ -601,15 +601,15 @@ aws cloudwatch get-metric-statistics \
 ```bash
 # Update SSM parameter
 aws ssm put-parameter \
-  --name /moltbot/bedrock-model \
+  --name /openclaw/bedrock-model \
   --value anthropic.claude-opus-4-5-v2 \
   --type String \
   --overwrite \
   --region us-east-1
 
-# Restart Moltbot service
+# Restart OpenClaw service
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -641,11 +641,11 @@ npx cdk deploy \
 # Connect to instance
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
 
-# Edit Moltbot config
-sudo nano /home/moltbot/.moltbot/config.json
+# Edit OpenClaw config
+sudo nano /home/openclaw/.openclaw/config.json
 
 # Add custom settings, then restart
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -669,20 +669,20 @@ npx cdk diff
 npx cdk deploy
 ```
 
-### Update Moltbot Version
+### Update OpenClaw Version
 
 ```bash
 # Connect to instance
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
 
-# Update Moltbot package
-sudo npm update -g moltbot
+# Update OpenClaw package
+sudo npm update -g openclaw
 
 # Restart service
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 
 # Verify new version
-moltbot --version
+openclaw --version
 
 exit
 ```
@@ -696,7 +696,7 @@ exit
 
 # Update SSM parameter
 aws ssm put-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --value NEW_TOKEN_HERE \
   --type SecureString \
   --overwrite \
@@ -704,7 +704,7 @@ aws ssm put-parameter \
 
 # Restart service
 aws ssm start-session --target $INSTANCE_ID --region us-east-1
-sudo systemctl restart moltbot
+sudo systemctl restart openclaw
 exit
 ```
 
@@ -753,7 +753,7 @@ aws s3 rb s3://cdk-hnb659fds-assets-ACCOUNT-REGION --force
 # Check for remaining resources
 aws cloudformation list-stacks \
   --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE \
-  --query 'StackSummaries[?contains(StackName, `Moltbot`)].StackName'
+  --query 'StackSummaries[?contains(StackName, `OpenClaw`)].StackName'
 
 # Should return empty []
 ```
@@ -786,8 +786,8 @@ Common issues:
 ## Support
 
 - 📖 [Full Documentation](../README.md)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 
 ---
 

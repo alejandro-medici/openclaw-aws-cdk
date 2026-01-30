@@ -1,4 +1,4 @@
-# Moltbot Migration Guide
+# OpenClaw Migration Guide
 **From VPS/Mac Mini to AWS CDK**
 
 *Last Updated: January 2026*
@@ -119,11 +119,11 @@ Week 2: Migration Execution
 # 1. SSH into your VPS
 ssh user@your-vps-ip
 
-# 2. Locate Moltbot directory
-cd ~/.moltbot  # or wherever Moltbot is installed
+# 2. Locate OpenClaw directory
+cd ~/.openclaw  # or wherever OpenClaw is installed
 
 # 3. Backup configuration
-tar -czf moltbot-backup-$(date +%Y%m%d).tar.gz \
+tar -czf openclaw-backup-$(date +%Y%m%d).tar.gz \
   config.json \
   .env \
   auth-profiles.json \
@@ -132,28 +132,28 @@ tar -czf moltbot-backup-$(date +%Y%m%d).tar.gz \
 
 # 4. Download backup to local machine
 # (from your local terminal)
-scp user@your-vps-ip:~/.moltbot/moltbot-backup-*.tar.gz ./backups/
+scp user@your-vps-ip:~/.openclaw/openclaw-backup-*.tar.gz ./backups/
 
 # 5. Verify backup
-tar -tzf backups/moltbot-backup-*.tar.gz
+tar -tzf backups/openclaw-backup-*.tar.gz
 ```
 
 ```bash
 # === FOR MAC MINI DEPLOYMENTS ===
 
-# 1. Locate Moltbot directory
-cd ~/Library/Application\ Support/moltbot
+# 1. Locate OpenClaw directory
+cd ~/Library/Application\ Support/openclaw
 # or
-cd ~/.moltbot
+cd ~/.openclaw
 
 # 2. Backup configuration
-tar -czf ~/Desktop/moltbot-backup-$(date +%Y%m%d).tar.gz \
+tar -czf ~/Desktop/openclaw-backup-$(date +%Y%m%d).tar.gz \
   config.json \
   conversations/ \
   sessions/
 
 # 3. Verify backup
-tar -tzf ~/Desktop/moltbot-backup-*.tar.gz
+tar -tzf ~/Desktop/openclaw-backup-*.tar.gz
 ```
 
 ---
@@ -234,7 +234,7 @@ tar -tzf ~/Desktop/moltbot-backup-*.tar.gz
 
 ```bash
 # From your current deployment
-cat ~/.moltbot/config.json
+cat ~/.openclaw/config.json
 
 # Note down:
 # - Telegram bot token
@@ -246,8 +246,8 @@ cat ~/.moltbot/config.json
 
 ```bash
 # Clone AWS CDK repository
-git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
-cd moltbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+cd openclaw-aws-cdk
 
 # Install dependencies
 npm install
@@ -269,14 +269,14 @@ npx cdk deploy \
 ```bash
 # Get instance ID from outputs
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
 # Check service status
 aws ssm start-session --target $INSTANCE_ID
-sudo systemctl status moltbot
-sudo journalctl -u moltbot -n 50
+sudo systemctl status openclaw
+sudo journalctl -u openclaw -n 50
 exit
 
 # Test in Telegram
@@ -287,11 +287,11 @@ exit
 
 ```bash
 # Watch CloudWatch logs
-aws logs tail /moltbot/gateway --follow
+aws logs tail /openclaw/gateway --follow
 
 # Check for errors
 aws logs filter-log-events \
-  --log-group-name /moltbot/gateway \
+  --log-group-name /openclaw/gateway \
   --filter-pattern "ERROR" \
   --start-time $(date -d '1 hour ago' +%s)000
 
@@ -306,26 +306,26 @@ aws ce get-cost-and-usage \
 
 ```bash
 # === FOR VPS ===
-# Stop Moltbot service
+# Stop OpenClaw service
 ssh user@your-vps
-sudo systemctl stop moltbot
-sudo systemctl disable moltbot
+sudo systemctl stop openclaw
+sudo systemctl disable openclaw
 
 # Archive data (for records)
-tar -czf moltbot-archive-$(date +%Y%m%d).tar.gz ~/.moltbot
-mv moltbot-archive-* ~/backups/
+tar -czf openclaw-archive-$(date +%Y%m%d).tar.gz ~/.openclaw
+mv openclaw-archive-* ~/backups/
 
 # Optional: Cancel VPS subscription
 # (Keep for 1 month as backup)
 
 # === FOR MAC MINI ===
-# Stop Moltbot
+# Stop OpenClaw
 # (depends on how it's running - PM2, systemd, manual, etc.)
-pm2 stop moltbot
-pm2 delete moltbot
+pm2 stop openclaw
+pm2 delete openclaw
 
 # Archive data
-tar -czf ~/Desktop/moltbot-archive-$(date +%Y%m%d).tar.gz ~/Library/Application\ Support/moltbot
+tar -czf ~/Desktop/openclaw-archive-$(date +%Y%m%d).tar.gz ~/Library/Application\ Support/openclaw
 
 # Keep Mac Mini for other uses or sell
 ```
@@ -338,10 +338,10 @@ tar -czf ~/Desktop/moltbot-archive-$(date +%Y%m%d).tar.gz ~/Library/Application\
 
 ```bash
 # SSH to VPS or access Mac Mini terminal
-cd ~/.moltbot
+cd ~/.openclaw
 
 # Find conversation data location
-# (varies by Moltbot version)
+# (varies by OpenClaw version)
 ls -la conversations/
 ls -la sessions/
 
@@ -352,11 +352,11 @@ cp -r sessions/ export/
 cp auth-profiles.json export/
 
 # Compress for transfer
-tar -czf moltbot-export-$(date +%Y%m%d).tar.gz export/
+tar -czf openclaw-export-$(date +%Y%m%d).tar.gz export/
 
 # Transfer to local machine
 # (from your local terminal, not VPS)
-scp user@your-vps:~/.moltbot/moltbot-export-*.tar.gz ./
+scp user@your-vps:~/.openclaw/openclaw-export-*.tar.gz ./
 ```
 
 #### Step 2: Deploy AWS with Same Bot Token
@@ -375,56 +375,56 @@ npx cdk deploy \
 ```bash
 # Get instance ID
 INSTANCE_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue' \
   --output text)
 
 # Connect to instance
 aws ssm start-session --target $INSTANCE_ID
 
-# Stop Moltbot service temporarily
-sudo systemctl stop moltbot
+# Stop OpenClaw service temporarily
+sudo systemctl stop openclaw
 
 # Create transfer directory
-mkdir -p /tmp/moltbot-import
+mkdir -p /tmp/openclaw-import
 exit
 
 # Copy data to instance using S3 (AWS CLI v2)
 # First, upload to S3
-aws s3 mb s3://moltbot-migration-temp-$RANDOM
-BUCKET=$(aws s3 ls | grep moltbot-migration-temp | awk '{print $3}')
-aws s3 cp moltbot-export-*.tar.gz s3://$BUCKET/
+aws s3 mb s3://openclaw-migration-temp-$RANDOM
+BUCKET=$(aws s3 ls | grep openclaw-migration-temp | awk '{print $3}')
+aws s3 cp openclaw-export-*.tar.gz s3://$BUCKET/
 
 # From instance, download and extract
 aws ssm start-session --target $INSTANCE_ID
 
 # Download from S3
-BUCKET=$(aws s3 ls | grep moltbot-migration-temp | awk '{print $3}')
-aws s3 cp s3://$BUCKET/moltbot-export-*.tar.gz /tmp/
+BUCKET=$(aws s3 ls | grep openclaw-migration-temp | awk '{print $3}')
+aws s3 cp s3://$BUCKET/openclaw-export-*.tar.gz /tmp/
 
 # Extract
 cd /tmp
-tar -xzf moltbot-export-*.tar.gz
+tar -xzf openclaw-export-*.tar.gz
 
-# Copy to Moltbot directory
-sudo cp -r export/conversations /home/moltbot/.moltbot/
-sudo cp -r export/sessions /home/moltbot/.moltbot/
-sudo cp export/auth-profiles.json /home/moltbot/.moltbot/
+# Copy to OpenClaw directory
+sudo cp -r export/conversations /home/openclaw/.openclaw/
+sudo cp -r export/sessions /home/openclaw/.openclaw/
+sudo cp export/auth-profiles.json /home/openclaw/.openclaw/
 
 # Fix permissions
-sudo chown -R moltbot:moltbot /home/moltbot/.moltbot/
+sudo chown -R openclaw:openclaw /home/openclaw/.openclaw/
 
 # Restart service
-sudo systemctl start moltbot
+sudo systemctl start openclaw
 
 # Verify
-sudo systemctl status moltbot
-sudo journalctl -u moltbot -n 20
+sudo systemctl status openclaw
+sudo journalctl -u openclaw -n 20
 
 exit
 
 # Clean up S3 bucket
-aws s3 rm s3://$BUCKET/moltbot-export-*.tar.gz
+aws s3 rm s3://$BUCKET/openclaw-export-*.tar.gz
 aws s3 rb s3://$BUCKET
 ```
 
@@ -436,7 +436,7 @@ aws s3 rb s3://$BUCKET
 # Bot should reference previous conversations
 
 # Check logs for successful data load
-aws logs tail /moltbot/gateway --since 10m | grep -i "conversation"
+aws logs tail /openclaw/gateway --since 10m | grep -i "conversation"
 ```
 
 #### Step 5: Switch Traffic
@@ -445,12 +445,12 @@ aws logs tail /moltbot/gateway --since 10m | grep -i "conversation"
 # Stop old deployment immediately
 # (since AWS is using same token now)
 ssh user@your-vps
-sudo systemctl stop moltbot
-sudo systemctl disable moltbot
+sudo systemctl stop openclaw
+sudo systemctl disable openclaw
 exit
 
 # Monitor AWS deployment
-aws logs tail /moltbot/gateway --follow
+aws logs tail /openclaw/gateway --follow
 ```
 
 ---
@@ -499,7 +499,7 @@ aws cloudwatch get-metric-statistics \
 ```bash
 # 1. Verify no inbound ports
 SG_ID=$(aws cloudformation describe-stacks \
-  --stack-name MoltbotStack \
+  --stack-name OpenClawStack \
   --query 'Stacks[0].Outputs[?OutputKey==`SecurityGroupId`].OutputValue' \
   --output text)
 
@@ -511,7 +511,7 @@ aws ec2 describe-security-groups \
 
 # 2. Verify encrypted secrets
 aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --query 'Parameter.Type' \
   --output text
 
@@ -545,8 +545,8 @@ aws ec2 stop-instances --instance-ids $INSTANCE_ID
 
 # 2. Restart old deployment
 ssh user@your-vps
-sudo systemctl start moltbot
-sudo systemctl status moltbot
+sudo systemctl start openclaw
+sudo systemctl status openclaw
 exit
 
 # 3. Verify old deployment working
@@ -569,12 +569,12 @@ If you need to recover data from AWS back to old deployment:
 aws ssm start-session --target $INSTANCE_ID
 
 # 2. Export data
-cd /home/moltbot/.moltbot
+cd /home/openclaw/.openclaw
 sudo tar -czf /tmp/aws-export.tar.gz conversations/ sessions/ auth-profiles.json
 
 # 3. Upload to S3
-aws s3 mb s3://moltbot-recovery-$RANDOM
-BUCKET=$(aws s3 ls | grep moltbot-recovery | awk '{print $3}')
+aws s3 mb s3://openclaw-recovery-$RANDOM
+BUCKET=$(aws s3 ls | grep openclaw-recovery | awk '{print $3}')
 aws s3 cp /tmp/aws-export.tar.gz s3://$BUCKET/
 
 exit
@@ -586,10 +586,10 @@ scp s3://$BUCKET/aws-export.tar.gz user@your-vps:/tmp/
 ssh user@your-vps
 cd /tmp
 tar -xzf aws-export.tar.gz
-cp -r conversations/ ~/.moltbot/
-cp -r sessions/ ~/.moltbot/
-cp auth-profiles.json ~/.moltbot/
-sudo systemctl restart moltbot
+cp -r conversations/ ~/.openclaw/
+cp -r sessions/ ~/.openclaw/
+cp auth-profiles.json ~/.openclaw/
+sudo systemctl restart openclaw
 ```
 
 ---
@@ -650,14 +650,14 @@ See [troubleshooting.md](troubleshooting.md) for detailed solutions.
 **Quick fixes:**
 
 1. **"Bot not responding after migration"**
-   - Check service status: `sudo systemctl status moltbot`
-   - View logs: `sudo journalctl -u moltbot -n 50`
-   - Restart: `sudo systemctl restart moltbot`
+   - Check service status: `sudo systemctl status openclaw`
+   - View logs: `sudo journalctl -u openclaw -n 50`
+   - Restart: `sudo systemctl restart openclaw`
 
 2. **"Conversation history not loaded"**
-   - Verify files copied: `ls -la /home/moltbot/.moltbot/conversations/`
-   - Check permissions: `ls -l /home/moltbot/.moltbot/`
-   - Fix: `sudo chown -R moltbot:moltbot /home/moltbot/.moltbot/`
+   - Verify files copied: `ls -la /home/openclaw/.openclaw/conversations/`
+   - Check permissions: `ls -l /home/openclaw/.openclaw/`
+   - Fix: `sudo chown -R openclaw:openclaw /home/openclaw/.openclaw/`
 
 3. **"Users getting 'not authorized' errors"**
    - DM pairing data not migrated
@@ -668,7 +668,7 @@ See [troubleshooting.md](troubleshooting.md) for detailed solutions.
 
 - 📖 [Deployment Guide](deployment-guide.md)
 - 🐛 [Troubleshooting Guide](troubleshooting.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 - 🔐 [Security Audit](security-audit.md)
 
 ---

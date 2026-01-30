@@ -1,10 +1,10 @@
 #!/bin/bash
-# Moltbot AWS CDK - Common Deployment Commands
+# OpenClaw AWS CDK - Common Deployment Commands
 # Usage: ./deployment-commands.sh [command]
 
 set -e
 
-STACK_NAME="MoltbotStack"
+STACK_NAME="OpenClawStack"
 
 # Colors for output
 RED='\033[0;31m'
@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 function print_usage() {
-    echo "Moltbot AWS CDK - Deployment Commands"
+    echo "OpenClaw AWS CDK - Deployment Commands"
     echo ""
     echo "Usage: ./deployment-commands.sh [command]"
     echo ""
@@ -27,14 +27,14 @@ function print_usage() {
     echo "  check-costs               Check current month costs"
     echo "  check-logs                Tail CloudWatch logs"
     echo "  connect                   Connect via Session Manager"
-    echo "  restart-service           Restart Moltbot service"
+    echo "  restart-service           Restart OpenClaw service"
     echo "  destroy                   Destroy stack (with confirmation)"
     echo "  help                      Show this help message"
     echo ""
 }
 
 function deploy_basic() {
-    echo -e "${GREEN}Deploying Moltbot with default settings...${NC}"
+    echo -e "${GREEN}Deploying OpenClaw with default settings...${NC}"
 
     read -p "Enter Telegram Bot Token: " TOKEN
 
@@ -47,7 +47,7 @@ function deploy_basic() {
 }
 
 function deploy_with_budget() {
-    echo -e "${GREEN}Deploying Moltbot with custom budget...${NC}"
+    echo -e "${GREEN}Deploying OpenClaw with custom budget...${NC}"
 
     read -p "Enter Telegram Bot Token: " TOKEN
     read -p "Enter Monthly Budget (USD): " BUDGET
@@ -64,7 +64,7 @@ function deploy_with_budget() {
 }
 
 function deploy_team() {
-    echo -e "${GREEN}Deploying Moltbot for team use...${NC}"
+    echo -e "${GREEN}Deploying OpenClaw for team use...${NC}"
 
     read -p "Enter Telegram Bot Token: " TOKEN
 
@@ -84,7 +84,7 @@ function deploy_team() {
 }
 
 function deploy_cost_optimized() {
-    echo -e "${GREEN}Deploying cost-optimized Moltbot...${NC}"
+    echo -e "${GREEN}Deploying cost-optimized OpenClaw...${NC}"
     echo -e "${YELLOW}Note: This requires additional setup for Spot instances${NC}"
 
     read -p "Enter Telegram Bot Token: " TOKEN
@@ -130,12 +130,12 @@ function update_model() {
     echo -e "${GREEN}Updating model to: $MODEL${NC}"
 
     aws ssm put-parameter \
-        --name /moltbot/bedrock-model \
+        --name /openclaw/bedrock-model \
         --value "$MODEL" \
         --overwrite \
         --region us-east-1
 
-    echo "Restarting Moltbot service..."
+    echo "Restarting OpenClaw service..."
     restart_service
 
     echo -e "${GREEN}Model updated successfully!${NC}"
@@ -192,7 +192,7 @@ function check_costs() {
         --time-period Start=$(date +%Y-%m-01),End=$(date +%Y-%m-%d) \
         --granularity MONTHLY \
         --metrics BlendedCost \
-        --filter file://<(echo '{"Tags":{"Key":"Application","Values":["Moltbot"]}}') \
+        --filter file://<(echo '{"Tags":{"Key":"Application","Values":["OpenClaw"]}}') \
         --query 'ResultsByTime[0].Total.BlendedCost.Amount' \
         --output text 2>/dev/null || echo "N/A")
 
@@ -206,7 +206,7 @@ function check_costs() {
         --granularity MONTHLY \
         --metrics BlendedCost \
         --group-by Type=SERVICE \
-        --filter file://<(echo '{"Tags":{"Key":"Application","Values":["Moltbot"]}}') \
+        --filter file://<(echo '{"Tags":{"Key":"Application","Values":["OpenClaw"]}}') \
         --query 'ResultsByTime[0].Groups[].[Keys[0],Metrics.BlendedCost.Amount]' \
         --output table 2>/dev/null || echo "Unable to fetch detailed costs"
 }
@@ -216,7 +216,7 @@ function check_logs() {
     echo "Press Ctrl+C to exit"
     echo ""
 
-    aws logs tail /moltbot/gateway --follow --region us-east-1
+    aws logs tail /openclaw/gateway --follow --region us-east-1
 }
 
 function connect() {
@@ -237,7 +237,7 @@ function connect() {
 }
 
 function restart_service() {
-    echo -e "${GREEN}Restarting Moltbot service...${NC}"
+    echo -e "${GREEN}Restarting OpenClaw service...${NC}"
 
     INSTANCE_ID=$(aws cloudformation describe-stacks \
         --stack-name $STACK_NAME \
@@ -252,7 +252,7 @@ function restart_service() {
     aws ssm send-command \
         --instance-ids $INSTANCE_ID \
         --document-name "AWS-RunShellScript" \
-        --parameters 'commands=["sudo systemctl restart moltbot"]' \
+        --parameters 'commands=["sudo systemctl restart openclaw"]' \
         --region us-east-1 \
         --output text
 
@@ -262,7 +262,7 @@ function restart_service() {
 }
 
 function destroy() {
-    echo -e "${RED}WARNING: This will destroy the entire Moltbot stack!${NC}"
+    echo -e "${RED}WARNING: This will destroy the entire OpenClaw stack!${NC}"
     echo "This includes:"
     echo "  - EC2 instance"
     echo "  - EBS volumes"
