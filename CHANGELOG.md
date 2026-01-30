@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Amazon Connect integration for enterprise features
 - Human agent escalation workflows
 
+## [0.2.1] - 2026-01-30
+
+### Changed
+- **REBRAND: OpenClaw → OpenClaw** following upstream announcement (Jan 30, 2026)
+  - This is the THIRD rebrand: Clawd → Clawdbot → OpenClaw → OpenClaw
+  - Updated all code references: `OpenClawStack` → `OpenClawStack`, `openclaw` → `openclaw`
+  - Updated all documentation, examples, and configuration files
+  - Updated package name: `openclaw-aws-cdk` → `openclaw-aws-cdk`
+  - Updated SSM parameter paths: `/openclaw/*` → `/openclaw/*`
+  - Updated CloudWatch log groups: `/openclaw/*` → `/openclaw/*`
+  - Updated all resource names, tags, and descriptions
+  - Renamed stack files: `lib/openclaw-stack.ts` → `lib/openclaw-stack.ts`
+  - Renamed bin files: `bin/openclaw-aws-cdk.ts` → `bin/openclaw-aws-cdk.ts`
+  - Renamed test files: `test/openclaw-stack.test.ts` → `test/openclaw-stack.test.ts`
+
+### Note
+- No functional changes - this is a pure rebrand to maintain consistency with upstream
+- Git history references to "OpenClaw" and "Clawdbot" remain unchanged for historical accuracy
+
 ## [0.2.0] - 2026-01-27
 
 ### Added
@@ -25,10 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [Cost Breakdown](docs/cost-breakdown.md) - Detailed cost analysis and optimization
   - [Security Audit](docs/security-audit.md) - Security checklist and compliance
   - [Architecture Diagrams](docs/architecture-diagrams.md) - Visual reference guide
-  - [Executive Brief](docs/moltbot-aws-executive-brief.md) - Business case and market analysis
+  - [Executive Brief](docs/openclaw-aws-executive-brief.md) - Business case and market analysis
 
 ### Changed
-- Rebranded from "Clawdbot" to "Moltbot" following upstream rename
+- Rebranded from "Clawdbot" to "OpenClaw" following upstream rename (this was later superseded by OpenClaw rebrand in v0.2.1)
 - Updated all documentation references
 
 ### Fixed
@@ -38,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Core Infrastructure**
-  - CDK stack for production-ready Moltbot deployment
+  - CDK stack for production-ready OpenClaw deployment
   - VPC with single AZ configuration (Free Tier optimized)
   - EC2 t3.micro instance with Amazon Linux 2023
   - Security Group with zero inbound ports (polling model)
@@ -52,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - CloudTrail-compatible design
 
 - **Monitoring & Observability**
-  - CloudWatch Logs integration (`/moltbot/gateway`)
+  - CloudWatch Logs integration (`/openclaw/gateway`)
   - CloudWatch Alarms for instance health
   - CPU utilization monitoring
   - Custom metrics support
@@ -60,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Cost Management**
   - AWS Budgets integration with alerts at 80% threshold
   - Free Tier optimization (Year 1: $0-10/month infrastructure)
-  - Cost allocation tags (Application: Moltbot)
+  - Cost allocation tags (Application: OpenClaw)
   - Budget forecast alerts at 100%
 
 - **Bedrock Integration**
@@ -72,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Operational Excellence**
   - Infrastructure as Code (CDK TypeScript)
   - Automated instance bootstrapping via UserData
-  - Systemd service for Moltbot auto-restart
+  - Systemd service for OpenClaw auto-restart
   - One-command deployment (`cdk deploy`)
 
 - **CDK Parameters**
@@ -166,10 +185,10 @@ npm install
 
 ### Version 0.1.0 - Initial Release
 
-First production-ready release of Moltbot AWS CDK. Provides a secure, cost-optimized deployment for personal and small team use.
+First production-ready release of OpenClaw AWS CDK. Provides a secure, cost-optimized deployment for personal and small team use.
 
 **Target users:**
-- Developers wanting secure Moltbot deployment
+- Developers wanting secure OpenClaw deployment
 - Teams concerned about VPS security risks
 - Free Tier users seeking cheapest cloud option
 - Users wanting enterprise upgrade path
@@ -221,8 +240,8 @@ For security issues, please email: security@example.com
 ## Support
 
 - 📖 [Documentation](README.md)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
-- 💬 [Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+- 💬 [Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 - 🔐 [Security Policy](SECURITY.md)
 
 ---
@@ -250,4 +269,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute.
 
 ---
 
-*This changelog is maintained by the Moltbot AWS CDK community.*
+*This changelog is maintained by the OpenClaw AWS CDK community.*

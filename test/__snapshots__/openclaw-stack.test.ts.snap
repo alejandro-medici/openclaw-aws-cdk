@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
+exports[`OpenClawStack Snapshot Tests template matches snapshot 1`] = `
 {
   "Outputs": {
     "ConnectCommand": {
       "Description": "Command to connect via Session Manager (no SSH needed)",
       "Export": {
-        "Name": "MoltbotConnectCommand",
+        "Name": "OpenClawConnectCommand",
       },
       "Value": {
         "Fn::Join": [
@@ -14,7 +14,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
           [
             "aws ssm start-session --target ",
             {
-              "Ref": "MoltbotInstance3484B6C0",
+              "Ref": "OpenClawInstanceABE0A9D0",
             },
             " --region ",
             {
@@ -26,25 +26,25 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     },
     "DeploymentNotes": {
       "Description": "Post-deployment steps",
-      "Value": "✅ Deployment complete! | 1. Connect: Use Session Manager (see ConnectCommand output) | 2. Logs: Check /var/log/moltbot-bootstrap.log for setup | 3. Status: Run systemctl status moltbot | 4. Security: Zero inbound ports, KMS-encrypted secrets | 5. Cost: Monitor via AWS Budgets (alert at 80%)",
+      "Value": "✅ Deployment complete! | 1. Connect: Use Session Manager (see ConnectCommand output) | 2. Logs: Check /var/log/openclaw-bootstrap.log for setup | 3. Status: Run systemctl status openclaw | 4. Security: Zero inbound ports, KMS-encrypted secrets | 5. Cost: Monitor via AWS Budgets (alert at 80%)",
     },
     "InstanceId": {
       "Description": "EC2 Instance ID",
       "Export": {
-        "Name": "MoltbotInstanceId",
+        "Name": "OpenClawInstanceId",
       },
       "Value": {
-        "Ref": "MoltbotInstance3484B6C0",
+        "Ref": "OpenClawInstanceABE0A9D0",
       },
     },
     "InstancePublicIp": {
       "Description": "Public IP (for reference only - SSH disabled)",
       "Export": {
-        "Name": "MoltbotPublicIp",
+        "Name": "OpenClawPublicIp",
       },
       "Value": {
         "Fn::GetAtt": [
-          "MoltbotInstance3484B6C0",
+          "OpenClawInstanceABE0A9D0",
           "PublicIp",
         ],
       },
@@ -52,13 +52,13 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "LogsCommand": {
       "Description": "Command to view live logs",
       "Export": {
-        "Name": "MoltbotLogsCommand",
+        "Name": "OpenClawLogsCommand",
       },
       "Value": {
         "Fn::Join": [
           "",
           [
-            "aws logs tail /moltbot/gateway --follow --region ",
+            "aws logs tail /openclaw/gateway --follow --region ",
             {
               "Ref": "AWS::Region",
             },
@@ -69,19 +69,19 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "SecurityGroupId": {
       "Description": "Security Group ID (zero inbound rules)",
       "Export": {
-        "Name": "MoltbotSecurityGroupId",
+        "Name": "OpenClawSecurityGroupId",
       },
       "Value": {
         "Fn::GetAtt": [
-          "MoltbotSecurityGroup55DBB83C",
+          "OpenClawSecurityGroup33D07FC5",
           "GroupId",
         ],
       },
     },
     "ServiceStatusCommand": {
-      "Description": "Command to check Moltbot service status",
+      "Description": "Command to check OpenClaw service status",
       "Export": {
-        "Name": "MoltbotStatusCommand",
+        "Name": "OpenClawStatusCommand",
       },
       "Value": {
         "Fn::Join": [
@@ -89,13 +89,13 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
           [
             "aws ssm start-session --target ",
             {
-              "Ref": "MoltbotInstance3484B6C0",
+              "Ref": "OpenClawInstanceABE0A9D0",
             },
             " --region ",
             {
               "Ref": "AWS::Region",
             },
-            " && sudo systemctl status moltbot",
+            " && sudo systemctl status openclaw",
           ],
         ],
       },
@@ -103,7 +103,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "TelegramTokenParameterArn": {
       "Description": "SSM Parameter ARN for Telegram token (KMS encrypted)",
       "Export": {
-        "Name": "MoltbotTelegramTokenArn",
+        "Name": "OpenClawTelegramTokenArn",
       },
       "Value": {
         "Fn::Join": [
@@ -194,7 +194,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "BedrockModelParameter66FBACFB": {
       "Properties": {
         "Description": "Bedrock model identifier",
-        "Name": "/moltbot/bedrock-model",
+        "Name": "/openclaw/bedrock-model",
         "Tier": "Standard",
         "Type": "String",
         "Value": {
@@ -206,13 +206,13 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "CPUUtilizationAlarm4D91B4D0": {
       "Properties": {
         "AlarmDescription": "Alert when CPU utilization exceeds 90% for 15 minutes",
-        "AlarmName": "moltbot-cpu-high",
+        "AlarmName": "openclaw-cpu-high",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "Dimensions": [
           {
             "Name": "InstanceId",
             "Value": {
-              "Ref": "MoltbotInstance3484B6C0",
+              "Ref": "OpenClawInstanceABE0A9D0",
             },
           },
         ],
@@ -229,7 +229,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     "GuardrailIdParameterDisabledC7FA6699": {
       "Properties": {
         "Description": "Guardrails disabled",
-        "Name": "/moltbot/guardrail-id",
+        "Name": "/openclaw/guardrail-id",
         "Tier": "Standard",
         "Type": "String",
         "Value": "DISABLED",
@@ -238,14 +238,14 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
     },
     "InstanceHealthAlarm26A15519": {
       "Properties": {
-        "AlarmDescription": "Alert when Moltbot instance fails health checks",
-        "AlarmName": "moltbot-instance-health",
+        "AlarmDescription": "Alert when OpenClaw instance fails health checks",
+        "AlarmName": "openclaw-instance-health",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "Dimensions": [
           {
             "Name": "InstanceId",
             "Value": {
-              "Ref": "MoltbotInstance3484B6C0",
+              "Ref": "OpenClawInstanceABE0A9D0",
             },
           },
         ],
@@ -259,7 +259,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "MoltbotBudget": {
+    "OpenClawBudget": {
       "Properties": {
         "Budget": {
           "BudgetLimit": {
@@ -268,11 +268,11 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
             },
             "Unit": "USD",
           },
-          "BudgetName": "Moltbot-Monthly-Budget",
+          "BudgetName": "OpenClaw-Monthly-Budget",
           "BudgetType": "COST",
           "CostFilters": {
             "TagKeyValue": [
-              "user:Application$Moltbot",
+              "user:Application$OpenClaw",
             ],
           },
           "TimeUnit": "MONTHLY",
@@ -314,10 +314,10 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
       },
       "Type": "AWS::Budgets::Budget",
     },
-    "MoltbotInstance3484B6C0": {
+    "OpenClawInstanceABE0A9D0": {
       "DependsOn": [
-        "MoltbotInstanceRoleDefaultPolicy422735F1",
-        "MoltbotInstanceRoleC4110890",
+        "OpenClawInstanceRoleDefaultPolicyCAC8BF58",
+        "OpenClawInstanceRoleBF498AEC",
       ],
       "Properties": {
         "AvailabilityZone": {
@@ -340,7 +340,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
           },
         ],
         "IamInstanceProfile": {
-          "Ref": "MoltbotInstanceInstanceProfile815F089D",
+          "Ref": "OpenClawInstanceInstanceProfileE453A1B7",
         },
         "ImageId": {
           "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
@@ -349,10 +349,10 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
           "Ref": "InstanceType",
         },
         "LaunchTemplate": {
-          "LaunchTemplateName": "MoltbotInstanceLaunchTemplate",
+          "LaunchTemplateName": "OpenClawInstanceLaunchTemplate",
           "Version": {
             "Fn::GetAtt": [
-              "MoltbotInstanceLaunchTemplate299DD40D",
+              "OpenClawInstanceLaunchTemplate2111511D",
               "LatestVersionNumber",
             ],
           },
@@ -360,18 +360,18 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
         "SecurityGroupIds": [
           {
             "Fn::GetAtt": [
-              "MoltbotSecurityGroup55DBB83C",
+              "OpenClawSecurityGroup33D07FC5",
               "GroupId",
             ],
           },
         ],
         "SubnetId": {
-          "Ref": "MoltbotVPCPublicSubnet1SubnetBA37B971",
+          "Ref": "OpenClawVPCPublicSubnet1SubnetF083E09A",
         },
         "Tags": [
           {
             "Key": "Application",
-            "Value": "Moltbot",
+            "Value": "OpenClaw",
           },
           {
             "Key": "CostCenter",
@@ -379,7 +379,7 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
           },
           {
             "Key": "Name",
-            "Value": "moltbot-gateway",
+            "Value": "openclaw-gateway",
           },
         ],
         "UserData": {
@@ -390,16 +390,16 @@ exports[`MoltbotStack Snapshot Tests template matches snapshot 1`] = `
                 "#!/bin/bash
 #!/bin/bash
 set -e
-exec > >(tee /var/log/moltbot-bootstrap.log)
+exec > >(tee /var/log/openclaw-bootstrap.log)
 exec 2>&1
 
-echo "=== Moltbot Bootstrap Started ==="
+echo "=== OpenClaw Bootstrap Started ==="
 date
 
 # Update system
 yum update -y
 
-# Install Node.js 22 (required for Moltbot)
+# Install Node.js 22 (required for OpenClaw)
 echo "Installing Node.js 22..."
 curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
 yum install -y nodejs
@@ -427,7 +427,7 @@ echo "Region: $REGION"
 # Retrieve Telegram token from SSM
 echo "Retrieving Telegram token from SSM..."
 TELEGRAM_TOKEN=$(aws ssm get-parameter \\
-  --name /moltbot/telegram-token \\
+  --name /openclaw/telegram-token \\
   --with-decryption \\
   --region $REGION \\
   --query Parameter.Value \\
@@ -440,26 +440,26 @@ fi
 
 # Retrieve Bedrock model
 BEDROCK_MODEL=$(aws ssm get-parameter \\
-  --name /moltbot/bedrock-model \\
+  --name /openclaw/bedrock-model \\
   --region $REGION \\
   --query Parameter.Value \\
   --output text)
 
 echo "Bedrock model: $BEDROCK_MODEL"
 
-# Install Moltbot globally
-echo "Installing Moltbot..."
-npm install -g moltbot@latest
+# Install OpenClaw globally
+echo "Installing OpenClaw..."
+npm install -g openclaw@latest
 
-# Create moltbot user (run as non-root)
-useradd -m -s /bin/bash moltbot || true
+# Create openclaw user (run as non-root)
+useradd -m -s /bin/bash openclaw || true
 
 # Create config directory
-mkdir -p /home/moltbot/.moltbot
-chown -R moltbot:moltbot /home/moltbot
+mkdir -p /home/openclaw/.openclaw
+chown -R openclaw:openclaw /home/openclaw
 
-# Configure Moltbot for Bedrock
-cat > /home/moltbot/.moltbot/config.json <<EOF
+# Configure OpenClaw for Bedrock
+cat > /home/openclaw/.openclaw/config.json <<EOF
 {
   "ai": {
     "provider": "bedrock",
@@ -479,40 +479,40 @@ cat > /home/moltbot/.moltbot/config.json <<EOF
 }
 EOF
 
-chown moltbot:moltbot /home/moltbot/.moltbot/config.json
-chmod 600 /home/moltbot/.moltbot/config.json
+chown openclaw:openclaw /home/openclaw/.openclaw/config.json
+chmod 600 /home/openclaw/.openclaw/config.json
 
 # Create systemd service
-cat > /etc/systemd/system/moltbot.service <<EOF
+cat > /etc/systemd/system/openclaw.service <<EOF
 [Unit]
-Description=Moltbot AI Gateway
+Description=OpenClaw AI Gateway
 After=network.target
 
 [Service]
 Type=simple
-User=moltbot
-WorkingDirectory=/home/moltbot
-ExecStart=/usr/bin/moltbot start
+User=openclaw
+WorkingDirectory=/home/openclaw
+ExecStart=/usr/bin/openclaw start
 Restart=always
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=moltbot
+SyslogIdentifier=openclaw
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Start Moltbot service
+# Start OpenClaw service
 systemctl daemon-reload
-systemctl enable moltbot
-systemctl start moltbot
+systemctl enable openclaw
+systemctl start openclaw
 
 # Verify service status
 sleep 5
-systemctl status moltbot --no-pager
+systemctl status openclaw --no-pager
 
-echo "=== Moltbot Bootstrap Completed ==="
+echo "=== OpenClaw Bootstrap Completed ==="
 date",
               ],
             ],
@@ -521,28 +521,28 @@ date",
       },
       "Type": "AWS::EC2::Instance",
     },
-    "MoltbotInstanceInstanceProfile815F089D": {
+    "OpenClawInstanceInstanceProfileE453A1B7": {
       "Properties": {
         "Roles": [
           {
-            "Ref": "MoltbotInstanceRoleC4110890",
+            "Ref": "OpenClawInstanceRoleBF498AEC",
           },
         ],
       },
       "Type": "AWS::IAM::InstanceProfile",
     },
-    "MoltbotInstanceLaunchTemplate299DD40D": {
+    "OpenClawInstanceLaunchTemplate2111511D": {
       "Properties": {
         "LaunchTemplateData": {
           "MetadataOptions": {
             "HttpTokens": "required",
           },
         },
-        "LaunchTemplateName": "MoltbotInstanceLaunchTemplate",
+        "LaunchTemplateName": "OpenClawInstanceLaunchTemplate",
       },
       "Type": "AWS::EC2::LaunchTemplate",
     },
-    "MoltbotInstanceRoleC4110890": {
+    "OpenClawInstanceRoleBF498AEC": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -556,7 +556,7 @@ date",
           ],
           "Version": "2012-10-17",
         },
-        "Description": "IAM role for Moltbot EC2 instance - Bedrock + SSM + CloudWatch",
+        "Description": "IAM role for OpenClaw EC2 instance - Bedrock + SSM + CloudWatch",
         "ManagedPolicyArns": [
           {
             "Fn::Join": [
@@ -571,11 +571,11 @@ date",
             ],
           },
         ],
-        "RoleName": "MoltbotGatewayRole",
+        "RoleName": "OpenClawGatewayRole",
       },
       "Type": "AWS::IAM::Role",
     },
-    "MoltbotInstanceRoleDefaultPolicy422735F1": {
+    "OpenClawInstanceRoleDefaultPolicyCAC8BF58": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -606,7 +606,7 @@ date",
                     {
                       "Ref": "AWS::AccountId",
                     },
-                    ":parameter/moltbot/*",
+                    ":parameter/openclaw/*",
                   ],
                 ],
               },
@@ -632,7 +632,7 @@ date",
                     {
                       "Ref": "AWS::AccountId",
                     },
-                    ":log-group:/moltbot/*",
+                    ":log-group:/openclaw/*",
                   ],
                 ],
               },
@@ -642,7 +642,7 @@ date",
               "Action": "cloudwatch:PutMetricData",
               "Condition": {
                 "StringEquals": {
-                  "cloudwatch:namespace": "Moltbot",
+                  "cloudwatch:namespace": "OpenClaw",
                 },
               },
               "Effect": "Allow",
@@ -652,28 +652,28 @@ date",
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "MoltbotInstanceRoleDefaultPolicy422735F1",
+        "PolicyName": "OpenClawInstanceRoleDefaultPolicyCAC8BF58",
         "Roles": [
           {
-            "Ref": "MoltbotInstanceRoleC4110890",
+            "Ref": "OpenClawInstanceRoleBF498AEC",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "MoltbotLogGroup316A0706": {
+    "OpenClawLogGroupFFB490CE": {
       "DeletionPolicy": "Delete",
       "Properties": {
-        "LogGroupName": "/moltbot/gateway",
+        "LogGroupName": "/openclaw/gateway",
         "RetentionInDays": 7,
       },
       "Type": "AWS::Logs::LogGroup",
       "UpdateReplacePolicy": "Delete",
     },
-    "MoltbotSecurityGroup55DBB83C": {
+    "OpenClawSecurityGroup33D07FC5": {
       "Properties": {
-        "GroupDescription": "Moltbot Gateway - Zero inbound traffic (polling model)",
-        "GroupName": "moltbot-gateway-sg",
+        "GroupDescription": "OpenClaw Gateway - Zero inbound traffic (polling model)",
+        "GroupName": "openclaw-gateway-sg",
         "SecurityGroupEgress": [
           {
             "CidrIp": "0.0.0.0/0",
@@ -688,12 +688,12 @@ date",
           },
         ],
         "VpcId": {
-          "Ref": "MoltbotVPC2DC8143A",
+          "Ref": "OpenClawVPCB4E27793",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "MoltbotVPC2DC8143A": {
+    "OpenClawVPCB4E27793": {
       "Properties": {
         "CidrBlock": "10.0.0.0/16",
         "EnableDnsHostnames": true,
@@ -702,64 +702,64 @@ date",
         "Tags": [
           {
             "Key": "Name",
-            "Value": "TestStack/MoltbotVPC",
+            "Value": "TestStack/OpenClawVPC",
           },
         ],
       },
       "Type": "AWS::EC2::VPC",
     },
-    "MoltbotVPCIGWC464DBA0": {
+    "OpenClawVPCIGWE43D74D4": {
       "Properties": {
         "Tags": [
           {
             "Key": "Name",
-            "Value": "TestStack/MoltbotVPC",
+            "Value": "TestStack/OpenClawVPC",
           },
         ],
       },
       "Type": "AWS::EC2::InternetGateway",
     },
-    "MoltbotVPCPublicSubnet1DefaultRoute315AE74E": {
+    "OpenClawVPCPublicSubnet1DefaultRoute49C1DF0B": {
       "DependsOn": [
-        "MoltbotVPCVPCGW126E5864",
+        "OpenClawVPCVPCGW8B460D49",
       ],
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "GatewayId": {
-          "Ref": "MoltbotVPCIGWC464DBA0",
+          "Ref": "OpenClawVPCIGWE43D74D4",
         },
         "RouteTableId": {
-          "Ref": "MoltbotVPCPublicSubnet1RouteTableD23649F9",
+          "Ref": "OpenClawVPCPublicSubnet1RouteTableDAD978D8",
         },
       },
       "Type": "AWS::EC2::Route",
     },
-    "MoltbotVPCPublicSubnet1RouteTableAssociation1E92CC9F": {
+    "OpenClawVPCPublicSubnet1RouteTableAssociation47E81B28": {
       "Properties": {
         "RouteTableId": {
-          "Ref": "MoltbotVPCPublicSubnet1RouteTableD23649F9",
+          "Ref": "OpenClawVPCPublicSubnet1RouteTableDAD978D8",
         },
         "SubnetId": {
-          "Ref": "MoltbotVPCPublicSubnet1SubnetBA37B971",
+          "Ref": "OpenClawVPCPublicSubnet1SubnetF083E09A",
         },
       },
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
     },
-    "MoltbotVPCPublicSubnet1RouteTableD23649F9": {
+    "OpenClawVPCPublicSubnet1RouteTableDAD978D8": {
       "Properties": {
         "Tags": [
           {
             "Key": "Name",
-            "Value": "TestStack/MoltbotVPC/PublicSubnet1",
+            "Value": "TestStack/OpenClawVPC/PublicSubnet1",
           },
         ],
         "VpcId": {
-          "Ref": "MoltbotVPC2DC8143A",
+          "Ref": "OpenClawVPCB4E27793",
         },
       },
       "Type": "AWS::EC2::RouteTable",
     },
-    "MoltbotVPCPublicSubnet1SubnetBA37B971": {
+    "OpenClawVPCPublicSubnet1SubnetF083E09A": {
       "Properties": {
         "AvailabilityZone": {
           "Fn::Select": [
@@ -782,30 +782,30 @@ date",
           },
           {
             "Key": "Name",
-            "Value": "TestStack/MoltbotVPC/PublicSubnet1",
+            "Value": "TestStack/OpenClawVPC/PublicSubnet1",
           },
         ],
         "VpcId": {
-          "Ref": "MoltbotVPC2DC8143A",
+          "Ref": "OpenClawVPCB4E27793",
         },
       },
       "Type": "AWS::EC2::Subnet",
     },
-    "MoltbotVPCVPCGW126E5864": {
+    "OpenClawVPCVPCGW8B460D49": {
       "Properties": {
         "InternetGatewayId": {
-          "Ref": "MoltbotVPCIGWC464DBA0",
+          "Ref": "OpenClawVPCIGWE43D74D4",
         },
         "VpcId": {
-          "Ref": "MoltbotVPC2DC8143A",
+          "Ref": "OpenClawVPCB4E27793",
         },
       },
       "Type": "AWS::EC2::VPCGatewayAttachment",
     },
     "TelegramTokenParameter12303434": {
       "Properties": {
-        "Description": "Telegram Bot Token for Moltbot (KMS encrypted)",
-        "Name": "/moltbot/telegram-token",
+        "Description": "Telegram Bot Token for OpenClaw (KMS encrypted)",
+        "Name": "/openclaw/telegram-token",
         "Tier": "Standard",
         "Type": "SecureString",
         "Value": {

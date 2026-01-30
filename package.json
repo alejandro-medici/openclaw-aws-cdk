@@ -1,9 +1,9 @@
 {
-  "name": "moltbot-aws-cdk",
+  "name": "openclaw-aws-cdk",
   "version": "0.1.0",
-  "description": "Production-ready Moltbot deployment on AWS using CDK - Security-first & Free Tier optimized",
+  "description": "Production-ready OpenClaw deployment on AWS using CDK - Security-first & Free Tier optimized",
   "bin": {
-    "moltbot-aws-cdk": "bin/moltbot-aws-cdk.js"
+    "openclaw-aws-cdk": "bin/openclaw-aws-cdk.js"
   },
   "scripts": {
     "build": "tsc",
@@ -16,7 +16,7 @@
     "destroy": "cdk destroy"
   },
   "keywords": [
-    "moltbot",
+    "openclaw",
     "aws",
     "cdk",
     "bedrock",

@@ -1,4 +1,4 @@
-# Moltbot AWS Architecture Diagrams
+# OpenClaw AWS Architecture Diagrams
 **Visual Reference Guide**
 
 ## Diagram 1: Phase 1 - Free Tier Architecture (Current Deployments vs AWS CDK)
@@ -18,7 +18,7 @@
     ┌─────────────────────────────────────┐
     │       VPS Instance                  │
     │  ┌──────────────────────────────┐   │
-    │  │ Moltbot Gateway             │   │
+    │  │ OpenClaw Gateway             │   │
     │  ├──────────────────────────────┤   │
     │  │ Config Files:                │   │
     │  │  • telegram_token.json       │ ⚠️ PLAINTEXT
@@ -74,7 +74,7 @@ VULNERABILITIES:
 │  │  │                                                          │     │   │
 │  │  │  • Amazon Linux 2023 (auto-patching) ✅                  │     │   │
 │  │  │  • Node.js 22+                                           │     │   │
-│  │  │  • Moltbot Gateway (npm install)                        │     │   │
+│  │  │  • OpenClaw Gateway (npm install)                        │     │   │
 │  │  │  • CloudWatch Agent                                      │     │   │
 │  │  │  • NO secrets on disk! ✅                                │     │   │
 │  │  │                                                          │     │   │
@@ -98,7 +98,7 @@ VULNERABILITIES:
 │  │  │ Amazon Bedrock  │  │ SSM Parameter   │  │ CloudWatch       │  │   │
 │  │  │                 │  │ Store           │  │                  │  │   │
 │  │  │ • Claude        │  │                 │  │ • Logs (/clawd*) │  │   │
-│  │  │   Sonnet 4.5 ✅ │  │ • /moltbot/    │  │ • Metrics        │  │   │
+│  │  │   Sonnet 4.5 ✅ │  │ • /openclaw/    │  │ • Metrics        │  │   │
 │  │  │ • Guardrails    │  │   telegram-token│  │ • Alarms         │  │   │
 │  │  │   (Optional) ✅ │  │   (ENCRYPTED)✅ │  │ • Dashboards     │  │   │
 │  │  │ • IAM Auth ✅   │  │ • KMS Encrypted │  │                  │  │   │
@@ -152,7 +152,7 @@ Telegram Servers
       ↓
 VPS Instance
  ┌────────────────────────────┐
- │ Moltbot Gateway           │
+ │ OpenClaw Gateway           │
  │ ┌────────────────────────┐ │
  │ │ Read token from        │ │
  │ │ /config/telegram.json  │ │ ⚠️ PLAINTEXT
@@ -208,7 +208,7 @@ Telegram Servers
       ↓
 EC2 Instance (via IAM Role)
  ┌────────────────────────────────┐
- │ Moltbot Gateway               │
+ │ OpenClaw Gateway               │
  │ ┌────────────────────────────┐ │
  │ │ Request token from SSM     │ │
  │ │ (IAM authenticated) ✅     │ │
@@ -220,7 +220,7 @@ EC2 Instance (via IAM Role)
       ↓
 SSM Parameter Store
  ┌────────────────────────────────┐
- │ /moltbot/telegram-token       │
+ │ /openclaw/telegram-token       │
  │ (KMS Encrypted at rest) ✅     │
  └────────────────────────────────┘
       │
@@ -389,7 +389,7 @@ BUT ONLY AWS CDK OFFERS:
 ┌──────────────────────────────────────┐
 │ VPS File System                      │
 │                                      │
-│ /home/user/.moltbot/                │
+│ /home/user/.openclaw/                │
 │ ├─ telegram-token.json    ⚠️ PLAIN  │
 │ ├─ .env                   ⚠️ PLAIN  │
 │ ├─ auth-profiles.json     ⚠️ PLAIN  │
@@ -438,7 +438,7 @@ ATTACK SURFACE SCORE: 8/10 (Very High)
 │ EC2 Instance                         │
 │                                      │
 │ File System:                         │
-│ /home/ec2-user/.moltbot/            │
+│ /home/ec2-user/.openclaw/            │
 │ ├─ NO secrets stored! ✅             │
 │ ├─ Config points to SSM ✅           │
 │ └─ sessions/ (encrypted EBS) ✅      │

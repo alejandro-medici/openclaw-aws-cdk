@@ -1,12 +1,12 @@
-# Moltbot AWS CDK
+# OpenClaw AWS CDK
 
-**Production-ready Moltbot deployment on AWS** - Security-first & Well-Architected
+**Production-ready OpenClaw deployment on AWS** - Security-first & Well-Architected
 
-Deploy [Moltbot](https://github.com/moltbot/moltbot) to AWS in 10 minutes with enterprise-grade security, cost controls, and zero inbound ports.
+Deploy [OpenClaw](https://github.com/openclaw/openclaw) to AWS in 10 minutes with enterprise-grade security, cost controls, and zero inbound ports.
 
 ## Why This Solution?
 
-Moltbot has **30K+ GitHub stars** but faces critical deployment challenges:
+OpenClaw has **30K+ GitHub stars** but faces critical deployment challenges:
 - 🔴 **8 CRITICAL security vulnerabilities** in typical deployments
 - 💰 **$300 runaway cost incidents** reported on Hacker News
 - 🔐 **Plaintext secrets** in JSON config files
@@ -35,8 +35,8 @@ Moltbot has **30K+ GitHub stars** but faces critical deployment challenges:
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/moltbot-aws-cdk.git
-cd moltbot-aws-cdk
+git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+cd openclaw-aws-cdk
 npm install
 
 # 2. Bootstrap CDK (first time only)
@@ -59,10 +59,10 @@ After deployment completes, CDK will show several outputs:
 aws ssm start-session --target i-xxxxx --region us-east-1
 
 # View live logs
-aws logs tail /moltbot/gateway --follow --region us-east-1
+aws logs tail /openclaw/gateway --follow --region us-east-1
 
 # Check service status (once connected via Session Manager)
-sudo systemctl status moltbot
+sudo systemctl status openclaw
 ```
 
 ### Test Your Bot
@@ -85,7 +85,7 @@ EC2 t3.micro (Amazon Linux 2023)
 ├─ IAM Role (Bedrock + SSM + CloudWatch) ✅
 ├─ SSM Session Manager (SSH replacement) ✅
 ├─ EBS encrypted (KMS) ✅
-└─ User Data → Installs Moltbot
+└─ User Data → Installs OpenClaw
     ↓
 SSM Parameter Store (KMS encrypted) ✅
     ↓
@@ -182,17 +182,17 @@ npx cdk deploy ...
 1. Check service status:
 ```bash
 aws ssm start-session --target i-xxxxx
-sudo systemctl status moltbot
+sudo systemctl status openclaw
 ```
 
 2. View bootstrap logs:
 ```bash
-sudo tail -f /var/log/moltbot-bootstrap.log
+sudo tail -f /var/log/openclaw-bootstrap.log
 ```
 
 3. Check CloudWatch logs:
 ```bash
-aws logs tail /moltbot/gateway --follow
+aws logs tail /openclaw/gateway --follow
 ```
 
 ### Cost exceeded expectations
@@ -248,7 +248,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- [Moltbot](https://github.com/moltbot/moltbot) - The amazing AI assistant this deploys
+- [OpenClaw](https://github.com/openclaw/openclaw) - The amazing AI assistant this deploys
 - AWS CDK team - Infrastructure as Code framework
 - Community contributors - Thank you!
 
@@ -258,9 +258,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - 💰 [Cost Breakdown](docs/cost-breakdown.md)
 - 🔒 [Security Audit](docs/security-audit.md)
 - 🔧 [Troubleshooting](docs/troubleshooting.md)
-- 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
-- 🌟 [Star this repo](https://github.com/YOUR_USERNAME/moltbot-aws-cdk) if it helped you!
+- 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+- 🌟 [Star this repo](https://github.com/YOUR_USERNAME/openclaw-aws-cdk) if it helped you!
 
 ---
 
-**Built with ❤️ by the community** | [Report an issue](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues) | [Request a feature](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/issues)
+**Built with ❤️ by the community** | [Report an issue](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues) | [Request a feature](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)

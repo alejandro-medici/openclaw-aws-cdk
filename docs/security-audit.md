@@ -1,4 +1,4 @@
-# Moltbot AWS CDK - Security Audit Checklist
+# OpenClaw AWS CDK - Security Audit Checklist
 **Well-Architected Framework Security Pillar**
 
 *Last Updated: January 2026*
@@ -42,10 +42,10 @@ Run this automated check to verify your deployment security:
 #!/bin/bash
 # save as: security-check.sh
 
-echo "=== Moltbot Security Audit ==="
+echo "=== OpenClaw Security Audit ==="
 echo ""
 
-STACK_NAME="MoltbotStack"
+STACK_NAME="OpenClawStack"
 SCORE=0
 MAX_SCORE=10
 
@@ -73,7 +73,7 @@ fi
 echo ""
 echo "2. Checking SSM Parameter Encryption..."
 PARAM_TYPE=$(aws ssm get-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --query 'Parameter.Type' \
   --output text)
 
@@ -151,7 +151,7 @@ fi
 # 7. Check IAM policy scope
 echo ""
 echo "7. Checking IAM Permissions..."
-ROLE_NAME="MoltbotGatewayRole"
+ROLE_NAME="OpenClawGatewayRole"
 BEDROCK_POLICY=$(aws iam list-role-policies \
   --role-name $ROLE_NAME \
   --query 'PolicyNames[0]' \
@@ -205,7 +205,7 @@ aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartNonInteract
 echo ""
 echo "10. Checking Bedrock Guardrails..."
 GUARDRAIL_PARAM=$(aws ssm get-parameter \
-  --name /moltbot/guardrail-id \
+  --name /openclaw/guardrail-id \
   --query 'Parameter.Value' \
   --output text 2>/dev/null)
 
@@ -326,7 +326,7 @@ aws ec2 revoke-security-group-ingress \
 
 - [ ] **SSM parameters encrypted**
   ```bash
-  aws ssm get-parameter --name /moltbot/telegram-token \
+  aws ssm get-parameter --name /openclaw/telegram-token \
     --query 'Parameter.{Type:Type,KeyId:KeyId}'
   # Type should be: "SecureString"
   ```
@@ -334,20 +334,20 @@ aws ec2 revoke-security-group-ingress \
 - [ ] **CloudWatch Logs encrypted** (optional, adds cost)
   ```bash
   aws logs describe-log-groups \
-    --log-group-name-prefix /moltbot \
+    --log-group-name-prefix /openclaw \
     --query 'logGroups[*].{Name:logGroupName,KmsKeyId:kmsKeyId}'
   ```
 
 **Remediation for unencrypted SSM:**
 ```bash
 # Get current value
-TOKEN=$(aws ssm get-parameter --name /moltbot/telegram-token \
+TOKEN=$(aws ssm get-parameter --name /openclaw/telegram-token \
   --query 'Parameter.Value' --output text)
 
 # Delete and recreate as SecureString
-aws ssm delete-parameter --name /moltbot/telegram-token
+aws ssm delete-parameter --name /openclaw/telegram-token
 aws ssm put-parameter \
-  --name /moltbot/telegram-token \
+  --name /openclaw/telegram-token \
   --value "$TOKEN" \
   --type SecureString \
   --description "Telegram token (KMS encrypted)"
@@ -359,7 +359,7 @@ aws ssm put-parameter \
   ```bash
   # Check in logs
   aws logs filter-log-events \
-    --log-group-name /moltbot/gateway \
+    --log-group-name /openclaw/gateway \
     --filter-pattern "bedrock-runtime" \
     --start-time $(date -d '1 hour ago' +%s)000 \
     | grep -o "https://"
@@ -367,9 +367,9 @@ aws ssm put-parameter \
 
 - [ ] **Telegram polling uses HTTPS**
   ```bash
-  # Verify Moltbot config
+  # Verify OpenClaw config
   aws ssm start-session --target $INSTANCE_ID
-  cat /home/moltbot/.moltbot/config.json | grep -i "polling"
+  cat /home/openclaw/.openclaw/config.json | grep -i "polling"
   # Should use HTTPS by default
   exit
   ```
@@ -390,7 +390,7 @@ aws ssm put-parameter \
 - [ ] **No secrets in CloudWatch Logs**
   ```bash
   aws logs filter-log-events \
-    --log-group-name /moltbot/gateway \
+    --log-group-name /openclaw/gateway \
     --filter-pattern "[token, password, key, secret]" \
     --start-time $(date -d '1 day ago' +%s)000 \
     | grep -E "(token|password|key|secret)" | head -5
@@ -412,15 +412,15 @@ aws ssm put-parameter \
 
 - [ ] **IAM policy follows least privilege**
   ```bash
-  aws iam list-role-policies --role-name MoltbotGatewayRole
-  aws iam get-role-policy --role-name MoltbotGatewayRole \
-    --policy-name MoltbotGatewayRoleDefaultPolicy*
+  aws iam list-role-policies --role-name OpenClawGatewayRole
+  aws iam get-role-policy --role-name OpenClawGatewayRole \
+    --policy-name OpenClawGatewayRoleDefaultPolicy*
   ```
 
   **Check:**
   - [ ] Bedrock access limited to `anthropic.*` models only
-  - [ ] SSM access limited to `/moltbot/*` parameters only
-  - [ ] CloudWatch access limited to `/moltbot/*` log groups only
+  - [ ] SSM access limited to `/openclaw/*` parameters only
+  - [ ] CloudWatch access limited to `/openclaw/*` log groups only
   - [ ] No `*` (wildcard) resources except where necessary
 
 **Example good policy:**
@@ -435,7 +435,7 @@ aws ssm put-parameter \
     {
       "Effect": "Allow",
       "Action": ["ssm:GetParameter"],
-      "Resource": "arn:aws:ssm:*:*:parameter/moltbot/*"
+      "Resource": "arn:aws:ssm:*:*:parameter/openclaw/*"
     }
   ]
 }
@@ -469,13 +469,13 @@ aws ssm put-parameter \
 - [ ] **CloudWatch Logs enabled**
   ```bash
   aws logs describe-log-groups \
-    --log-group-name-prefix /moltbot
+    --log-group-name-prefix /openclaw
   ```
 
 - [ ] **CloudWatch Alarms configured**
   ```bash
   aws cloudwatch describe-alarms \
-    --alarm-name-prefix moltbot
+    --alarm-name-prefix openclaw
   # Should show at least:
   # - CPU utilization alarm
   # - Instance health alarm
@@ -485,7 +485,7 @@ aws ssm put-parameter \
   ```bash
   aws budgets describe-budgets \
     --account-id $(aws sts get-caller-identity --query Account --output text) \
-    --query 'Budgets[?contains(BudgetName, `Moltbot`)]'
+    --query 'Budgets[?contains(BudgetName, `OpenClaw`)]'
   ```
 
 #### 4.2 Audit Trail
@@ -534,26 +534,26 @@ aws ssm put-parameter \
 
 #### 5.2 Application Security
 
-- [ ] **Moltbot running as non-root user**
+- [ ] **OpenClaw running as non-root user**
   ```bash
   aws ssm start-session --target $INSTANCE_ID
-  ps aux | grep moltbot
-  # Should show user "moltbot", not "root"
+  ps aux | grep openclaw
+  # Should show user "openclaw", not "root"
   exit
   ```
 
 - [ ] **Config file permissions restrictive**
   ```bash
   aws ssm start-session --target $INSTANCE_ID
-  ls -la /home/moltbot/.moltbot/config.json
-  # Should be: -rw------- (600) owned by moltbot
+  ls -la /home/openclaw/.openclaw/config.json
+  # Should be: -rw------- (600) owned by openclaw
   exit
   ```
 
 - [ ] **DM pairing enabled** (if desired)
   ```bash
   aws ssm start-session --target $INSTANCE_ID
-  cat /home/moltbot/.moltbot/config.json | grep -A3 "security"
+  cat /home/openclaw/.openclaw/config.json | grep -A3 "security"
   # Should show: "dmPairing": true, "requireApproval": true
   exit
   ```
@@ -574,7 +574,7 @@ aws ssm put-parameter \
 
 - [ ] **Configuration backed up to SSM**
   ```bash
-  aws ssm get-parameters-by-path --path /moltbot \
+  aws ssm get-parameters-by-path --path /openclaw \
     --query 'Parameters[*].Name'
   # Should show all config parameters
   ```
@@ -584,7 +584,7 @@ aws ssm put-parameter \
 - [ ] **Auto-restart configured**
   ```bash
   aws ssm start-session --target $INSTANCE_ID
-  sudo systemctl show moltbot | grep Restart=
+  sudo systemctl show openclaw | grep Restart=
   # Should show: Restart=always
   exit
   ```
@@ -592,7 +592,7 @@ aws ssm put-parameter \
 - [ ] **Health check alarms**
   ```bash
   aws cloudwatch describe-alarms \
-    --alarm-names moltbot-instance-health
+    --alarm-names openclaw-instance-health
   ```
 
 ---
@@ -647,7 +647,7 @@ aws cloudtrail lookup-events \
      --groups sg-ISOLATED_SG_ID
 
    # Rotate all secrets
-   aws ssm put-parameter --name /moltbot/telegram-token \
+   aws ssm put-parameter --name /openclaw/telegram-token \
      --value NEW_TOKEN --type SecureString --overwrite
 
    # Review CloudTrail for full incident timeline
@@ -669,7 +669,7 @@ aws ce get-cost-and-usage \
   --group-by Type=SERVICE
 
 # 2. If Bedrock runaway:
-aws logs tail /moltbot/gateway --since 1h | grep -c "InvokeModel"
+aws logs tail /openclaw/gateway --since 1h | grep -c "InvokeModel"
 # If >1000 calls/hour, stop instance
 
 # 3. Emergency stop
@@ -777,7 +777,7 @@ aws securityhub get-findings \
 
 For security issues:
 - **Private disclosure:** security@example.com
-- **Public discussion:** [GitHub Discussions](https://github.com/YOUR_USERNAME/moltbot-aws-cdk/discussions)
+- **Public discussion:** [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
 
 **DO NOT** open public issues for security vulnerabilities!
 
