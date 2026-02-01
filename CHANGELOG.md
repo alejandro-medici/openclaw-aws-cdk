@@ -231,7 +231,7 @@ open docs/deployment-guide.md
 
 ### None
 
-For security issues, please email: security@example.com
+For security issues, use [GitHub Security Advisories](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories).
 
 **DO NOT** open public issues for security vulnerabilities.
 

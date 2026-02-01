@@ -8,16 +8,12 @@ We take security seriously. If you discover a security vulnerability in this pro
 
 **DO NOT** open a public GitHub issue for security vulnerabilities.
 
-Instead, please report security issues via one of the following methods:
+Instead, please report security issues privately using:
 
-1. **Email**: Send details to [security@example.com](mailto:security@example.com)
-   - Use PGP key (fingerprint: TBD) for sensitive information
-   - Include steps to reproduce the vulnerability
-   - Provide any proof-of-concept code if applicable
-
-2. **GitHub Security Advisory**: Use the [GitHub Security Advisory](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories/new) feature
-   - This creates a private disclosure
-   - We can collaborate on a fix before public disclosure
+**GitHub Security Advisory**: Use the [GitHub Security Advisory](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories/new) feature
+- This creates a private disclosure visible only to maintainers
+- We can collaborate on a fix before public disclosure
+- GitHub will notify us automatically
 
 ### What to Include
 
@@ -163,9 +159,9 @@ Subscribe to [GitHub Security Advisories](https://github.com/alejandro-medici/op
 
 ## Contact
 
-For security inquiries: security@example.com
+For security vulnerabilities: Use [GitHub Security Advisories](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories)
 
-For general inquiries: See [README.md](README.md)
+For general inquiries: See [README.md](README.md) or open an [issue](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
 
 ---
 
