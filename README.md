@@ -6,21 +6,27 @@ Deploy [OpenClaw](https://github.com/openclaw/openclaw) to AWS in 10 minutes wit
 
 ## Why This Solution?
 
-OpenClaw has **30K+ GitHub stars** but faces critical deployment challenges:
-- 🔴 **8 CRITICAL security vulnerabilities** in typical deployments
-- 💰 **$300 runaway cost incidents** reported on Hacker News
-- 🔐 **Plaintext secrets** in JSON config files
-- 🚪 **SSH exposed** on traditional VPS deployments
-- ❌ **No cost monitoring** built-in
+Traditional OpenClaw deployments face critical security and operational challenges:
 
-**This CDK solves all of these:**
+**Security Risks:**
+- Plaintext secrets stored in JSON config files
+- SSH ports exposed to the internet
+- No secret rotation or encryption at rest
+- Manual security patching required
 
-✅ **Zero inbound ports** (polling model, no SSH)
-✅ **KMS-encrypted secrets** (SSM Parameter Store)
-✅ **IAM roles** (no API keys to rotate)
-✅ **Budget alerts** (prevent $300 surprises)
-✅ **CloudWatch monitoring** (full audit trail)
-✅ **Free Tier optimized** ($0-10/month Year 1)
+**Operational Problems:**
+- No cost monitoring or budget controls (leading to $300+ runaway bills)
+- No centralized logging or audit trails
+- Difficult to troubleshoot production issues
+
+**This CDK eliminates these risks:**
+
+- **Zero inbound ports**: Polling model, no SSH exposure
+- **Encrypted secrets**: KMS-encrypted SSM Parameter Store
+- **IAM roles**: No API keys to manage or rotate
+- **Budget alerts**: Automated cost monitoring and alerts
+- **CloudWatch integration**: Full audit trail and centralized logs
+- **Free Tier optimized**: $8-30/month Year 1, $9-33/month with Spot Instances
 
 ## Quick Start
 
@@ -71,6 +77,27 @@ sudo systemctl status openclaw
 2. Send `/start` to begin pairing
 3. Bot will ask for approval (DM pairing security)
 4. Start chatting with your AI assistant!
+
+### Access OpenClaw Web Interface (Optional)
+
+OpenClaw provides a web dashboard for monitoring and configuration. Access it securely from your local machine using SSM Port Forwarding:
+
+```bash
+# Forward OpenClaw's web port to your local machine (no VPN needed!)
+aws ssm start-session \
+  --target i-xxxxx \
+  --document-name AWS-StartPortForwardingSession \
+  --parameters '{"portNumber":["8080"],"localPortNumber":["8080"]}'
+
+# Now open in your browser
+open http://localhost:8080
+```
+
+**How it works:**
+- Creates encrypted tunnel through AWS Systems Manager
+- No inbound ports opened on EC2 instance
+- No VPN or bastion host required
+- Traffic stays within AWS network
 
 ## Architecture
 
@@ -132,15 +159,13 @@ npx cdk deploy -c useSpotInstances=true
 
 **Compare to alternatives:**
 
-| Solution | Monthly Cost | Security Score |
-|----------|--------------|----------------|
-| Hetzner VPS | €3.49 | 🔴 2/10 (SSH exposed, plaintext secrets) |
-| Railway | $5-20 | 🟡 5/10 (basic secret management) |
-| Mac Mini | $5 + $599 upfront | 🟡 4/10 (manual security) |
-| **This CDK (Spot)** | **$9-33** | 🟢 **9/10** (enterprise security) ✅ |
-| This CDK (On-Demand) | $16-38 | 🟢 9/10 (enterprise security) |
+| Solution | Monthly Cost | Security | Maintenance |
+|----------|--------------|----------|-------------|
+| Mac Mini | $5 + $599 upfront | Manual security, plaintext secrets | Self-managed, physical access required |
+| **This CDK (Spot)** | **$9-33/mo** | Enterprise-grade (KMS, IAM, zero-trust) | Fully managed, automated patching |
+| This CDK (On-Demand) | $16-38/mo | Enterprise-grade (KMS, IAM, zero-trust) | Fully managed, automated patching |
 
-**Why pay 3x more than Hetzner?** You're not paying for hosting—you're paying to **avoid being hacked**. Security researchers found [hundreds of exposed OpenClaw installations](https://blogs.cisco.com/ai/personal-ai-agents-like-openclaw-are-a-security-nightmare) with stolen credentials.
+**Why AWS over Mac Mini?** You're paying for security automation and remote access. Security researchers found [hundreds of exposed OpenClaw installations](https://blogs.cisco.com/ai/personal-ai-agents-like-openclaw-are-a-security-nightmare) with stolen credentials.
 
 ## Configuration Options
 
@@ -218,26 +243,6 @@ aws logs tail /openclaw/gateway --follow
 aws budgets update-budget --account-id YOUR_ACCOUNT --budget ...
 ```
 
-## Roadmap
-
-### Phase 1: MVP (Complete)
-- ✅ CDK stack with security-first design
-- ✅ Free Tier optimized
-- ✅ Basic monitoring & alerts
-- ✅ Quick start documentation
-- ✅ Bedrock Guardrails integration (v0.2.0)
-
-### Phase 2: Enhanced Features (Next)
-- [ ] Multi-region support
-- [ ] Advanced cost optimization
-- [ ] Backup & recovery automation
-
-### Phase 3: Enterprise (Future)
-- [ ] Amazon Connect integration
-- [ ] Multi-channel support (Voice, SMS, WhatsApp)
-- [ ] Human agent escalation
-- [ ] Compliance features (HIPAA, SOC2)
-
 ## Contributing
 
 Contributions welcome! Please:
@@ -250,9 +255,9 @@ Contributions welcome! Please:
 
 ## Security
 
-Found a security issue? Please report responsibly:
-- Email: security@example.com
-- Do NOT open public issues for security vulnerabilities
+Found a security issue? Please report it privately via [GitHub Security Advisories](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories/new).
+
+**Do NOT open public issues for security vulnerabilities.**
 
 See [SECURITY.md](SECURITY.md) for details.
 
