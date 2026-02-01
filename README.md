@@ -120,52 +120,26 @@ Amazon Bedrock (Claude Sonnet 4.5) ✅
 ```
 
 **Security advantages over typical VPS:**
-- ❌ No SSH port exposed
-- ❌ No plaintext secrets on disk
-- ❌ No API keys to rotate (IAM roles)
-- ✅ Full CloudTrail audit log
-- ✅ KMS encryption at rest
-- ✅ Budget alerts prevent runaway costs
+- No SSH port exposed
+- No plaintext secrets on disk
+- No API keys to rotate (IAM roles)
+- Full CloudTrail audit log
+- KMS encryption at rest
+- Budget alerts prevent runaway costs
 
-### Cost Breakdown
+## Cost Overview
 
-**Year 1 (Free Tier):**
-```
-EC2 t3.micro:        $0/month (750 hours free)
-EBS 8GB gp3:         $0/month (30GB free)
-CloudWatch Logs:     $0/month (<5GB free)
-SSM:                 $0/month (always free)
-Bedrock (usage):     $8-30/month (pay per token)
-─────────────────────────────────────────────
-Total Year 1:        $8-30/month typical
-```
+**Estimated monthly costs:**
+- **Year 1 (Free Tier):** $8-30/month (Bedrock API usage only)
+- **Year 2+:** $9-33/month with Spot Instances, $16-38/month On-Demand
 
-**Year 2+ Cost Optimization Strategies:**
+For detailed cost breakdown, optimization strategies, and comparison with alternatives, see [docs/cost-breakdown.md](docs/cost-breakdown.md).
 
-| Strategy | Infrastructure | Total w/ Bedrock | Commitment | Interruptions |
-|----------|---------------|------------------|------------|---------------|
-| **On-Demand** | $8.23/mo | $16-38/mo | None | No |
-| **Spot Instances** | $0.80-2.50/mo | **$9-33/mo** | None | Rare (~5%) |
-| **1yr Savings** | $4.50/mo | $13-35/mo | 1 year | No |
-| **3yr Savings** | $2.80/mo | $11-33/mo | 3 years | No |
-
-**Recommended:** Start with **Spot Instances** for 60-90% savings with minimal interruption risk.
-
-**Deploy with Spot:**
+**Quick cost optimization:**
 ```bash
-# See examples/cost-optimization/spot-instance-stack.ts
+# Deploy with Spot Instances (60-90% savings)
 npx cdk deploy -c useSpotInstances=true
 ```
-
-**Compare to alternatives:**
-
-| Solution | Monthly Cost | Security | Maintenance |
-|----------|--------------|----------|-------------|
-| Mac Mini | $5 + $599 upfront | Manual security, plaintext secrets | Self-managed, physical access required |
-| **This CDK (Spot)** | **$9-33/mo** | Enterprise-grade (KMS, IAM, zero-trust) | Fully managed, automated patching |
-| This CDK (On-Demand) | $16-38/mo | Enterprise-grade (KMS, IAM, zero-trust) | Fully managed, automated patching |
-
-**Why AWS over Mac Mini?** You're paying for security automation and remote access. Security researchers found [hundreds of exposed OpenClaw installations](https://blogs.cisco.com/ai/personal-ai-agents-like-openclaw-are-a-security-nightmare) with stolen credentials.
 
 ## Configuration Options
 
