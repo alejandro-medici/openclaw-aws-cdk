@@ -11,7 +11,7 @@ Be respectful, inclusive, and professional. We're all here to make deploying Ope
 ### Reporting Bugs
 
 Before creating a bug report:
-1. Check if the issue already exists in [GitHub Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+1. Check if the issue already exists in [GitHub Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
 2. Verify you're using the latest version
 3. Test with a clean AWS account if possible
 
@@ -43,7 +43,7 @@ Feature requests are welcome! Please include:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 
 # Install dependencies
@@ -265,9 +265,9 @@ aws iam get-role-policy --role-name OpenClawGatewayRole
 
 ## Questions?
 
-- 💬 Open a [Discussion](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
-- 🐛 Report a [Bug](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues/new?template=bug_report.md)
-- 💡 Suggest a [Feature](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues/new?template=feature_request.md)
+- 💬 Open a [Discussion](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
+- 🐛 Report a [Bug](https://github.com/alejandro-medici/openclaw-aws-cdk/issues/new?template=bug_report.md)
+- 💡 Suggest a [Feature](https://github.com/alejandro-medici/openclaw-aws-cdk/issues/new?template=feature_request.md)
 
 ## Recognition
 

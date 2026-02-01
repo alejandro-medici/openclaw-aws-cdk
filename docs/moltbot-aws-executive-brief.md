@@ -1837,7 +1837,7 @@ export class OpenClawStack extends cdk.Stack {
 # 4. Telegram Bot Token (get from @BotFather)
 
 # DEPLOYMENT (10 MINUTES)
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 
 npm install

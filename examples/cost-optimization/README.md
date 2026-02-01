@@ -253,7 +253,7 @@ npx cdk deploy \
 
 Questions about cost optimization?
 - 📖 [Cost Breakdown Guide](../../docs/cost-breakdown.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- 💬 [GitHub Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 - 📊 [AWS Cost Explorer](https://console.aws.amazon.com/cost-management/home)
 
 ---

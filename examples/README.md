@@ -36,7 +36,7 @@ examples/
 
 ```bash
 # Clone and deploy with default settings
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 npm install
 
@@ -300,8 +300,8 @@ jobs:
 
 For questions about these examples:
 - 📖 [Main Documentation](../README.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+- 💬 [GitHub Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
 
 ## Contributing
 

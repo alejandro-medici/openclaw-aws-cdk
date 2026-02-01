@@ -15,7 +15,7 @@ Instead, please report security issues via one of the following methods:
    - Include steps to reproduce the vulnerability
    - Provide any proof-of-concept code if applicable
 
-2. **GitHub Security Advisory**: Use the [GitHub Security Advisory](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/security/advisories/new) feature
+2. **GitHub Security Advisory**: Use the [GitHub Security Advisory](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories/new) feature
    - This creates a private disclosure
    - We can collaborate on a fix before public disclosure
 
@@ -153,7 +153,7 @@ We will publish security advisories for:
 - Cost runaway scenarios
 - Compliance violations
 
-Subscribe to [GitHub Security Advisories](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/security/advisories) for notifications.
+Subscribe to [GitHub Security Advisories](https://github.com/alejandro-medici/openclaw-aws-cdk/security/advisories) for notifications.
 
 ## Security Audit History
 

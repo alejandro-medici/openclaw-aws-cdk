@@ -188,7 +188,7 @@ aws sts get-caller-identity
 
 ```bash
 # Clone from GitHub
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 
 # Verify files
@@ -786,8 +786,8 @@ Common issues:
 ## Support
 
 - 📖 [Full Documentation](../README.md)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
+- 💬 [GitHub Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 
 ---
 

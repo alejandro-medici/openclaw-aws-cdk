@@ -240,8 +240,8 @@ For security issues, please email: security@example.com
 ## Support
 
 - 📖 [Documentation](README.md)
-- 🐛 [Report Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
-- 💬 [Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- 🐛 [Report Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
+- 💬 [Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 - 🔐 [Security Policy](SECURITY.md)
 
 ---

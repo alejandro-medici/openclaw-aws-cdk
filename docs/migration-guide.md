@@ -246,7 +246,7 @@ cat ~/.openclaw/config.json
 
 ```bash
 # Clone AWS CDK repository
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 
 # Install dependencies
@@ -668,7 +668,7 @@ See [troubleshooting.md](troubleshooting.md) for detailed solutions.
 
 - 📖 [Deployment Guide](deployment-guide.md)
 - 🐛 [Troubleshooting Guide](troubleshooting.md)
-- 💬 [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- 💬 [GitHub Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 - 🔐 [Security Audit](security-audit.md)
 
 ---
