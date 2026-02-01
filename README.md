@@ -35,7 +35,7 @@ OpenClaw has **30K+ GitHub stars** but faces critical deployment challenges:
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/openclaw-aws-cdk.git
+git clone https://github.com/alejandro-medici/openclaw-aws-cdk.git
 cd openclaw-aws-cdk
 npm install
 
@@ -165,34 +165,6 @@ npx cdk deploy \
 - `EnableGuardrails`: Bedrock Guardrails for prompt injection protection
 - `BudgetAlertEmail`: Email address for budget alerts (optional)
 
-## Reusable CDK Construct (Coming Soon)
-
-This project will soon be available as a reusable CDK Construct, making it even easier to deploy secure AI bots:
-
-```typescript
-// Future usage (work in progress)
-import { SecureAIBot } from '@your-org/aws-ai-bot-construct';
-
-const bot = new SecureAIBot(this, 'MyBot', {
-  telegramToken: process.env.TELEGRAM_TOKEN!,
-  bedrockModel: 'anthropic.claude-sonnet-4-5-v2',
-  enableGuardrails: true,
-  useSpotInstances: true,  // 60-90% cost savings
-  budget: {
-    monthlyLimit: 50,
-    alertEmail: 'alerts@example.com'
-  }
-});
-```
-
-**Why a CDK Construct?**
-- ✅ Reuse across multiple projects
-- ✅ Share security best practices as code
-- ✅ Single `npm install` instead of cloning repo
-- ✅ Versioned and tested releases
-- ✅ Community contributions via npm
-
-Interested in early access? [Star this repo](https://github.com/YOUR_USERNAME/openclaw-aws-cdk) to get notified!
 
 ## Well-Architected Compliance
 
@@ -300,9 +272,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - 💰 [Cost Breakdown](docs/cost-breakdown.md)
 - 🔒 [Security Audit](docs/security-audit.md)
 - 🔧 [Troubleshooting](docs/troubleshooting.md)
-- 💬 [GitHub Issues](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
-- 🌟 [Star this repo](https://github.com/YOUR_USERNAME/openclaw-aws-cdk) if it helped you!
+- 💬 [GitHub Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
+- 🌟 [Star this repo](https://github.com/alejandro-medici/openclaw-aws-cdk) if it helped you!
 
 ---
 
-**Built with ❤️ by the community** | [Report an issue](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues) | [Request a feature](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+**Built with ❤️ by the community** | [Report an issue](https://github.com/alejandro-medici/openclaw-aws-cdk/issues) | [Request a feature](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)

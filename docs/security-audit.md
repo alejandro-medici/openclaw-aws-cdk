@@ -777,7 +777,7 @@ aws securityhub get-findings \
 
 For security issues:
 - **Private disclosure:** security@example.com
-- **Public discussion:** [GitHub Discussions](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+- **Public discussion:** [GitHub Discussions](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 
 **DO NOT** open public issues for security vulnerabilities!
 

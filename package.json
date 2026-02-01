@@ -1,6 +1,6 @@
 {
   "name": "openclaw-aws-cdk",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Production-ready OpenClaw deployment on AWS using CDK - Security-first & Free Tier optimized",
   "bin": {
     "openclaw-aws-cdk": "bin/openclaw-aws-cdk.js"
@@ -24,8 +24,16 @@
     "security",
     "well-architected"
   ],
-  "author": "Your Name",
+  "author": "Alejandro Medici",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alejandro-medici/openclaw-aws-cdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alejandro-medici/openclaw-aws-cdk/issues"
+  },
+  "homepage": "https://github.com/alejandro-medici/openclaw-aws-cdk#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "22.10.2",

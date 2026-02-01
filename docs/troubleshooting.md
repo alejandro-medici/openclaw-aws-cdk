@@ -157,7 +157,7 @@ User: arn:aws:iam::123456789012:user/john is not authorized to perform: cloudfor
 1. Attach AdministratorAccess policy (temporary):
 ```bash
 aws iam attach-user-policy \
-  --user-name YOUR_USERNAME \
+  --user-name alejandro-medici \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 ```
 
@@ -740,11 +740,11 @@ exit
 
 ### Support Channels
 
-1. **GitHub Issues**: [Create an issue](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/issues)
+1. **GitHub Issues**: [Create an issue](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)
    - Include: CDK version, error message, relevant logs
    - Redact: Tokens, account IDs, personal info
 
-2. **GitHub Discussions**: [Ask a question](https://github.com/YOUR_USERNAME/openclaw-aws-cdk/discussions)
+2. **GitHub Discussions**: [Ask a question](https://github.com/alejandro-medici/openclaw-aws-cdk/discussions)
 
 3. **AWS Support**: For AWS-specific issues (costs, quotas, etc.)
 
