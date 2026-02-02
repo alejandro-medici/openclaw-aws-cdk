@@ -90,9 +90,16 @@ export class OpenClawStack extends cdk.Stack {
     const securityGroup = new ec2.SecurityGroup(this, 'OpenClawSecurityGroup', {
       vpc,
       description: 'OpenClaw Gateway - Zero inbound traffic (polling model)',
-      allowAllOutbound: true,
+      allowAllOutbound: false,
       securityGroupName: 'openclaw-gateway-sg'
     });
+
+    // HTTPS outbound only (Telegram API, Bedrock, SSM, CloudWatch)
+    securityGroup.addEgressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(443),
+      'HTTPS outbound for Telegram API, Bedrock, SSM, CloudWatch'
+    );
 
     // Explicitly document: NO inbound rules = zero attack surface
     cdk.Tags.of(securityGroup).add('SecurityPosture', 'Zero-Inbound');
