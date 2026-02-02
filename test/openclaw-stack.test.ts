@@ -47,11 +47,15 @@ describe('OpenClawStack', () => {
       });
     });
 
-    test('should allow all outbound traffic', () => {
+    test('should allow HTTPS outbound only', () => {
       template.hasResourceProperties('AWS::EC2::SecurityGroup', {
         SecurityGroupEgress: Match.arrayWith([
           Match.objectLike({
-            CidrIp: '0.0.0.0/0'
+            CidrIp: '0.0.0.0/0',
+            IpProtocol: 'tcp',
+            FromPort: 443,
+            ToPort: 443,
+            Description: Match.stringLikeRegexp('.*HTTPS.*')
           })
         ])
       });
