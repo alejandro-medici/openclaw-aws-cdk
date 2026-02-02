@@ -41,10 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [Deployment Guide](docs/deployment-guide.md) - Step-by-step deployment instructions
   - [Troubleshooting Guide](docs/troubleshooting.md) - Common issues and solutions
   - [Migration Guide](docs/migration-guide.md) - VPS/Mac Mini to AWS migration
-  - [Cost Breakdown](docs/cost-breakdown.md) - Detailed cost analysis and optimization
   - [Security Audit](docs/security-audit.md) - Security checklist and compliance
   - [Architecture Diagrams](docs/architecture-diagrams.md) - Visual reference guide
-  - [Executive Brief](docs/openclaw-aws-executive-brief.md) - Business case and market analysis
 
 ### Changed
 - Rebranded from "Clawdbot" to "OpenClaw" following upstream rename (this was later superseded by OpenClaw rebrand in v0.2.1)

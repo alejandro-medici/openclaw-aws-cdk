@@ -133,8 +133,6 @@ Amazon Bedrock (Claude Sonnet 4.5) ✅
 - **Year 1 (Free Tier):** $8-30/month (Bedrock API usage only)
 - **Year 2+:** $9-33/month with Spot Instances, $16-38/month On-Demand
 
-For detailed cost breakdown, optimization strategies, and comparison with alternatives, see [docs/cost-breakdown.md](docs/cost-breakdown.md).
-
 **Quick cost optimization:**
 ```bash
 # Deploy with Spot Instances (60-90% savings)
@@ -248,7 +246,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Support
 
 - 📖 [Deployment Guide](docs/deployment-guide.md)
-- 💰 [Cost Breakdown](docs/cost-breakdown.md)
 - 🔒 [Security Audit](docs/security-audit.md)
 - 🔧 [Troubleshooting](docs/troubleshooting.md)
 - 💬 [GitHub Issues](https://github.com/alejandro-medici/openclaw-aws-cdk/issues)

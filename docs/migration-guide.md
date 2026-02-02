@@ -624,21 +624,6 @@ Year 2+ (Post Free Tier):
 └─ Total:            $33.73/month = $405/year
 ```
 
-### ROI Calculation
-
-```
-Year 1 Savings: $346 - $300 = $46
-Year 2 Cost:    $405 - $346 = $59 extra
-Break-even:     After 13 months
-
-BUT adds value:
-✅ Zero inbound ports (priceless for security)
-✅ KMS encryption
-✅ Budget alerts
-✅ Automated backups
-✅ Enterprise path
-```
-
 ---
 
 ## Migration Support

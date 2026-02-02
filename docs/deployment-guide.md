@@ -776,7 +776,6 @@ Common issues:
 ## Next Steps
 
 - ✅ Deployment complete!
-- 📊 Review [cost-breakdown.md](cost-breakdown.md) to understand costs
 - 🔒 Run [security-audit.md](security-audit.md) checklist
 - 🚀 Explore [migration-guide.md](migration-guide.md) for VPS users
 - 📈 Monitor usage in CloudWatch dashboard
