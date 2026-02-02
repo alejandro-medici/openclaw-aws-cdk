@@ -369,7 +369,7 @@ npx cdk deploy \
   --parameters BedrockModel=anthropic.claude-sonnet-4-5-v2 \
   --parameters InstanceType=t3.micro \
   --parameters MonthlyBudget=50 \
-  --parameters EnableGuardrails=false \
+  --parameters EnableGuardrails=true \
   --parameters BudgetAlertEmail=your-email@example.com
 
 # Deployment takes 5-10 minutes
@@ -613,15 +613,16 @@ sudo systemctl restart openclaw
 exit
 ```
 
-### Enable Guardrails (Post-Deployment)
+### Disable Guardrails (Not Recommended for Public Bots)
 
 ```bash
-# Re-deploy with Guardrails enabled
+# Re-deploy with Guardrails disabled (only for internal/trusted use)
 npx cdk deploy \
   --parameters TelegramBotToken=YOUR_TOKEN \
-  --parameters EnableGuardrails=true
+  --parameters EnableGuardrails=false
 
 # This will update the stack (takes 2-3 minutes)
+# WARNING: Disabling guardrails removes prompt injection protection
 ```
 
 ### Scale Up Instance Size

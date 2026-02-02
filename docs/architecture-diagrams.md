@@ -100,7 +100,7 @@ VULNERABILITIES:
 │  │  │ • Claude        │  │                 │  │ • Logs (/clawd*) │  │   │
 │  │  │   Sonnet 4.5 ✅ │  │ • /openclaw/    │  │ • Metrics        │  │   │
 │  │  │ • Guardrails    │  │   telegram-token│  │ • Alarms         │  │   │
-│  │  │   (Optional) ✅ │  │   (ENCRYPTED)✅ │  │ • Dashboards     │  │   │
+│  │  │   (Default) ✅  │  │   (ENCRYPTED)✅ │  │ • Dashboards     │  │   │
 │  │  │ • IAM Auth ✅   │  │ • KMS Encrypted │  │                  │  │   │
 │  │  └─────────────────┘  │   at rest ✅    │  └──────────────────┘  │   │
 │  │                       └─────────────────┘                         │   │
@@ -239,7 +239,7 @@ EC2 Instance
       ↓
 Amazon Bedrock
  ┌────────────────────────────────┐
- │ Optional: Guardrails Filter    │
+ │ Guardrails Filter (Default) ✅ │
  │ ├─ Prompt injection detect ✅  │
  │ ├─ Sensitive data filter ✅    │
  │ └─ Topic filters ✅            │

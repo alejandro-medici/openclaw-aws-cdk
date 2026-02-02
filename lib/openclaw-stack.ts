@@ -50,9 +50,9 @@ export class OpenClawStack extends cdk.Stack {
 
     const enableGuardrails = new cdk.CfnParameter(this, 'EnableGuardrails', {
       type: 'String',
-      default: 'false',
+      default: 'true',
       allowedValues: ['true', 'false'],
-      description: 'Enable Bedrock Guardrails for prompt injection protection (additional cost)'
+      description: 'Enable Bedrock Guardrails for prompt injection protection (recommended for public bots)'
     });
 
     const budgetEmail = new cdk.CfnParameter(this, 'BudgetAlertEmail', {

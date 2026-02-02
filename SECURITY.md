@@ -101,6 +101,20 @@ When using this CDK stack, please follow these security guidelines:
 - ✅ **DO** set up CloudWatch Alarms for critical metrics
 - ❌ **DON'T** disable logging to save costs
 
+#### Prompt Injection Protection
+- ✅ **DO** keep Bedrock Guardrails enabled (default: enabled)
+- ✅ **DO** monitor guardrail blocking metrics in CloudWatch
+- ✅ **DO** review blocked prompts for attack patterns
+- ✅ **DO** understand guardrail costs ([pricing details](https://aws.amazon.com/bedrock/pricing/))
+- ❌ **DON'T** disable guardrails for public-facing bots
+- ❌ **DON'T** ignore guardrail blocking alerts
+
+**Why this matters**: Public Telegram channels are highly vulnerable to prompt injection attacks where malicious users attempt to manipulate the AI's behavior, extract sensitive information, or bypass security controls. Bedrock Guardrails provide critical protection against these attacks by:
+- Filtering malicious content before it reaches the model
+- Blocking attempts to manipulate system prompts
+- Preventing sensitive information disclosure
+- Detecting and stopping jailbreak attempts
+
 ## Known Security Considerations
 
 ### 1. Default VPC Usage

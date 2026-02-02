@@ -21,6 +21,7 @@ Traditional OpenClaw deployments face critical security and operational challeng
 
 **This CDK eliminates these risks:**
 
+- **Prompt injection protection**: Bedrock Guardrails enabled by default ([pricing](https://aws.amazon.com/bedrock/pricing/))
 - **Zero inbound ports**: Polling model, no SSH exposure
 - **Encrypted secrets**: KMS-encrypted SSM Parameter Store
 - **IAM roles**: No API keys to manage or rotate
