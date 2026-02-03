@@ -54,3 +54,6 @@ secrets.json
 credentials
 config
 untracked/
+
+# Claude AI instructions
+CLAUDE.md
